@@ -1,5 +1,7 @@
-#include <xmi.h>
 #include <cmark.h>
+#include <stdlib.h>
+#include <string.h>
+#include <xmi.h>
 
 static int md2html(lua_State* lua)
 {
