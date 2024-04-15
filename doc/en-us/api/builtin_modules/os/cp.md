@@ -54,7 +54,7 @@ Under 2.5.7, the parameter `{symlink = true}` is added to keep the symbolic link
 ${link:os_cp}("/xxx/foo", "/xxx/bar", {symlink = true})
 ```
 
-#### Support version: >= 2.0.1
+#### Introduced in version 2.0.1
 
 #### See also
 

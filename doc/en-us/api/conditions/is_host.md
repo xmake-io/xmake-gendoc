@@ -33,7 +33,7 @@ Support hosts:
 
 We can also get it from ${link:var_host} [$(host)](/manual/builtin_variables?id=varhost) or ${link:os_host} [os.host](/manual/builtin_modules?id=oshost).
 
-#### Support version: >= 2.1.4
+#### Introduced in version 2.1.4
 
 #### See also
 

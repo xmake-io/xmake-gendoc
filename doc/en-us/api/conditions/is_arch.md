@@ -36,7 +36,7 @@ if ${link:is_arch}("arm.*") then
 end
 ```
 
-#### Support version: >= 2.0.1
+#### Introduced in version 2.0.1
 
 #### See also
 

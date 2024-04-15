@@ -36,7 +36,7 @@ Support platforms:
 * "iphoneos"
 * "watchos"
 
-#### Support version: >= 2.0.1
+#### Introduced in version 2.0.1
 
 #### See also
 

@@ -30,7 +30,7 @@ We can also quickly check the current subsystem platform by executing `xmake l o
 
 > ⚠ **It may also support other subsystem environments under linux and macos systems later, if they exist.**
 
-#### Support version: >= 2.3.1 (?)
+#### Introduced in version 2.3.1 (?)
 
 #### See also
 

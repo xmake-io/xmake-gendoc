@@ -16,7 +16,7 @@ In the msys/cygwin subsystem environment, the compiler architecture defaults to 
 
 We can also quickly view the current subsystem architecture by executing `xmake l os.subarch`.
 
-#### Support version: >= 2.0.1
+#### Introduced in version 2.0.1
 
 #### See also
 
