@@ -2,7 +2,6 @@
 isapi: true
 key: is_subarch
 name: is_subarch
-page: api/conditions.html
 ---
 
 ### ${anchor:is_subarch}

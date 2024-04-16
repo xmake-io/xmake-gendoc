@@ -2,7 +2,6 @@
 isapi: true
 key: os_cp
 name: os.cp
-page: api/builtin_modules/os.html
 ---
 
 ### ${anchor:os_cp}

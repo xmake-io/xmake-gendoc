@@ -2,7 +2,6 @@
 isapi: false
 key: conditions_intro
 name: Conditions
-page: api/conditions.html
 ---
 
 ## ${anchor:conditions_intro}

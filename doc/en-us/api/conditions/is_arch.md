@@ -2,7 +2,6 @@
 isapi: true
 key: is_arch
 name: is_arch
-page: api/conditions.html
 ---
 
 ### ${anchor:is_arch}

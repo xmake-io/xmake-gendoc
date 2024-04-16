@@ -2,7 +2,6 @@
 isapi: true
 key: is_os
 name: is_os
-page: api/conditions.html
 ---
 
 ### ${anchor:is_os}

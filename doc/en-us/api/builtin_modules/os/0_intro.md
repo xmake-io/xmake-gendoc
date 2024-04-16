@@ -2,7 +2,6 @@
 isapi: false
 key: os_intro
 name: os
-page: api/builtin_modules/os.html
 ---
 
 ## ${anchor:os_intro}

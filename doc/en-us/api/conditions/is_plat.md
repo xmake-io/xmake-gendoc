@@ -2,7 +2,6 @@
 isapi: true
 key: is_plat
 name: is_plat
-page: api/conditions.html
 ---
 
 ### ${anchor:is_plat}

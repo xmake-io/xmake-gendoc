@@ -2,7 +2,6 @@
 isapi: true
 key: is_subhost
 name: is_subhost
-page: api/conditions.html
 ---
 
 ### ${anchor:is_subhost}

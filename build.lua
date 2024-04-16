@@ -21,7 +21,6 @@
 -- imports
 import("core.base.option")
 import("core.sandbox.module")
-import("core.sandbox.sandbox")
 
 local options = {
     {'o', "output",   "kv", nil, "Output html directory. (default is ./html)"},
@@ -30,10 +29,10 @@ local options = {
 
 function _load_file_metadata(filecontent)
 
-    local pattern = "%-%-%-\nisapi: ([%w%p]+)\nkey: ([%w%p]+)\nname: ([%w%p]+)\npage: ([%w%p]+)\n%-%-%-"
+    local pattern = "%-%-%-\nisapi: ([%w%p]+)\nkey: ([%w%p]+)\nname: ([%w%p]+)\n%-%-%-"
 
     local apientry = {}
-    apientry.isapi, apientry.key, apientry.name, apientry.page = filecontent:match(pattern)
+    apientry.isapi, apientry.key, apientry.name = filecontent:match(pattern)
     local metadatastart, metadataend = filecontent:find(pattern)
 
     return apientry, metadatastart, metadataend
@@ -55,17 +54,19 @@ function _make_db(locale)
     return db
 end
 
-function _make_anchor(db, key, locale, siteroot)
+function _make_anchor(db, key, page, locale, siteroot)
+    assert(db and key and page and locale and siteroot)
     if db[key] then
-        return [[<a href="]] .. siteroot .. '/' .. locale .. '/' .. db[key].page .. '#' .. db[key].key .. [[" id="]] .. db[key].key .. [[">]] .. db[key].name .. [[</a>]]
+        return [[<a href="]] .. siteroot .. '/' .. locale .. '/' .. page .. '#' .. db[key].key .. [[" id="]] .. db[key].key .. [[">]] .. db[key].name .. [[</a>]]
     else
         return [[<s>]] .. key .. [[</s>]]
     end
 end
 
-function _make_link(db, key, locale, siteroot)
+function _make_link(db, key, page, locale, siteroot)
+    assert(db and key and page and locale and siteroot)
     if db[key] then
-        return [[<a href="]] .. siteroot .. '/' .. locale .. '/' .. db[key].page .. '#' .. db[key].key .. [[">]] .. db[key].name .. [[</a>]]
+        return [[<a href="]] .. siteroot .. '/' .. locale .. '/' .. page .. '#' .. db[key].key .. [[">]] .. db[key].name .. [[</a>]]
     else
         return [[<s>]] .. key .. [[</s>]]
     end
@@ -75,16 +76,13 @@ function _build_html_page(cmark, docdir, title, db, sidebar, opt)
     opt = opt or {}
 
     local locale = opt.locale or "en-us"
-    local outputfile = opt.outputfile and path.join(opt.outputdir or "", locale, opt.outputfile) or
-        path.join(opt.outputdir or "", locale, docdir .. ".html")
-
-    local outputfile = opt.outputfile or (docdir .. ".html")
+    local page = docdir .. ".html"
     local isindex = false
     if title == "index" and docdir == "." then
-        outputfile = "index.html"
+        page = "index.html"
         isindex = true
     end
-    outputfile = path.join(opt.outputdir or "", locale, outputfile)
+    local outputfile = path.join(opt.outputdir or "", locale, page)
 
     local siteroot = opt.siteroot or "https://xmake.io"
     local interfaces = "Interfaces" -- TODO change with language
@@ -136,7 +134,6 @@ function _build_html_page(cmark, docdir, title, db, sidebar, opt)
         assert(apientry.isapi ~= nil, "entry isapi is nil value")
         assert(apientry.key ~= nil, "entry key is nil value")
         assert(apientry.name ~= nil, "entry name is nil value")
-        assert(apientry.page ~= nil, "entry page is nil value")
         table.insert(apientries, apientry)
 
         local anchorstart, anchorend
@@ -145,7 +142,7 @@ function _build_html_page(cmark, docdir, title, db, sidebar, opt)
             if anchorstart == nil then break end
 
             local anchor = htmldata:sub(anchorstart + 9, anchorend - 1)
-            htmldata = htmldata:gsub("%${anchor:[%w_]+}", _make_anchor(db, anchor, locale, siteroot), 1)
+            htmldata = htmldata:gsub("%${anchor:[%w_]+}", _make_anchor(db, anchor, page, locale, siteroot), 1)
         until not anchorstart
 
         local linkstart, linkend
@@ -154,7 +151,7 @@ function _build_html_page(cmark, docdir, title, db, sidebar, opt)
             if linkstart == nil then break end
 
             local link = htmldata:sub(linkstart + 7, linkend - 1)
-            htmldata = htmldata:gsub("%${link:[%w_]+}", _make_link(db, link, locale, siteroot), 1)
+            htmldata = htmldata:gsub("%${link:[%w_]+}", _make_link(db, link, page, locale, siteroot), 1)
         until not linkstart
 
         sitemap:write(htmldata)
@@ -175,7 +172,7 @@ function _build_html_page(cmark, docdir, title, db, sidebar, opt)
 
         for _, apientry in ipairs(apientries) do
             if apientry.isapi then
-                sitemap:write("        <tr><td>" .. _make_link(db, apientry.key, locale, siteroot) .. "</td></tr>\n")
+                sitemap:write("        <tr><td>" .. _make_link(db, apientry.key, page, locale, siteroot) .. "</td></tr>\n")
             end
         end
 
