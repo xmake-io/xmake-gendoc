@@ -2,7 +2,6 @@
 isapi: false
 key: exceptions_intro
 name: try-catch-finally
-page: api/builtin_modules/exceptions.html
 ---
 
 ## ${anchor:exceptions_intro}

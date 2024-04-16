@@ -2,7 +2,6 @@
 isapi: true
 key: is_mode
 name: is_mode
-page: api/conditions.html
 ---
 
 ### ${anchor:is_mode}

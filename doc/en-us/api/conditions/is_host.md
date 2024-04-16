@@ -2,7 +2,6 @@
 isapi: true
 key: is_host
 name: is_host
-page: api/conditions.html
 ---
 
 ### ${anchor:is_host}

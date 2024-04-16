@@ -2,7 +2,6 @@
 isapi: false
 key: index
 name: index
-page: index.html
 ---
 
 ## Support this project
