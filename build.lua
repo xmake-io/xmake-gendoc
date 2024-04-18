@@ -29,7 +29,7 @@ local options = {
 
 function _load_file_metadata(filecontent)
 
-    local pattern = "%-%-%-\nisapi: ([%w%p]+)\nkey: ([%w%p]+)\nname: ([%w%p]+)\n%-%-%-"
+    local pattern = "%-%-%-\nisapi: ([%w%p]+)\nkey: ([%w%p]+)\nname: (.+)\n%-%-%-"
 
     local apientry = {}
     apientry.isapi, apientry.key, apientry.name = filecontent:match(pattern)
@@ -199,7 +199,6 @@ function _build_html_pages(cmark, opt)
     }
 
     if os.isdir(buildopt.outputdir) then
-        print(os.filedirs(path.join(buildopt.outputdir, "*")))
         raise("the output folder '" .. buildopt.outputdir .. "' already exists and is not empty")
     end
 
