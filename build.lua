@@ -190,11 +190,9 @@ function _build_html_pages(cmark, opt)
     for _, dir in ipairs(os.dirs(path.join(os.scriptdir(), "doc", "*"))) do
         opt.locale = path.basename(dir)
 
-        local db = _make_db(opt.locale)
-
-        local pagesgroups = import("doc." .. opt.locale .. ".pages")()
-
         local sidebar = ""
+        local db = _make_db(opt.locale)
+        local pagesgroups = io.load(path.join(os.scriptdir(), "doc", opt.locale, "pages.lua"))
         for _, pagegroup in ipairs(pagesgroups) do
             sidebar = sidebar .. "\n<p>" .. pagegroup.title .. "</p>\n<ul>\n"
             for _, page in ipairs(pagegroup.pages) do
