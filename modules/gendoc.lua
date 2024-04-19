@@ -43,10 +43,14 @@ function _make_db(locale)
     return db
 end
 
+function _join_link(...)
+    return path.unix(path.join(...)):gsub("//", "/")
+end
+
 function _make_anchor(db, key, page, locale, siteroot)
     assert(db and key and page and locale and siteroot)
     if db[key] then
-        return [[<a href="]] .. path.unix(path.normalize(path.join(siteroot, locale, page))) .. '#' .. db[key].key .. [[" id="]] .. db[key].key .. [[">]] .. db[key].name .. [[</a>]]
+        return [[<a href="]] .. _join_link(siteroot, locale, page) .. '#' .. db[key].key .. [[" id="]] .. db[key].key .. [[">]] .. db[key].name .. [[</a>]]
     else
         return [[<s>]] .. key .. [[</s>]]
     end
@@ -55,7 +59,7 @@ end
 function _make_link(db, key, page, locale, siteroot)
     assert(db and key and page and locale and siteroot)
     if db[key] then
-        return [[<a href="]] .. path.unix(path.normalize(path.join(siteroot, locale, page))) .. '#' .. db[key].key .. [[">]] .. db[key].name .. [[</a>]]
+        return [[<a href="]] .. _join_link(siteroot, locale, page) .. '#' .. db[key].key .. [[">]] .. db[key].name .. [[</a>]]
     else
         return [[<s>]] .. key .. [[</s>]]
     end
