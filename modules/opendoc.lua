@@ -23,7 +23,7 @@ import("core.base.option")
 
 function main()
     local htmldir = path.absolute(option.get("htmldir"))
-    local indexfile = path.join(htmldir, "en-us", "index.html")
+    local indexfile = path.join(htmldir, "index.html")
     if is_host("macosx") then
         os.execv("open", {indexfile})
     else

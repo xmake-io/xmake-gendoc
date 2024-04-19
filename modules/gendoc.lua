@@ -46,7 +46,7 @@ end
 function _make_anchor(db, key, page, locale, siteroot)
     assert(db and key and page and locale and siteroot)
     if db[key] then
-        return [[<a href="]] .. siteroot .. '/' .. locale .. '/' .. page .. '#' .. db[key].key .. [[" id="]] .. db[key].key .. [[">]] .. db[key].name .. [[</a>]]
+        return [[<a href="]] .. path.unix(path.normalize(path.join(siteroot, locale, page))) .. '#' .. db[key].key .. [[" id="]] .. db[key].key .. [[">]] .. db[key].name .. [[</a>]]
     else
         return [[<s>]] .. key .. [[</s>]]
     end
@@ -55,7 +55,7 @@ end
 function _make_link(db, key, page, locale, siteroot)
     assert(db and key and page and locale and siteroot)
     if db[key] then
-        return [[<a href="]] .. siteroot .. '/' .. locale .. '/' .. page .. '#' .. db[key].key .. [[">]] .. db[key].name .. [[</a>]]
+        return [[<a href="]] .. path.unix(path.normalize(path.join(siteroot, locale, page))) .. '#' .. db[key].key .. [[">]] .. db[key].name .. [[</a>]]
     else
         return [[<s>]] .. key .. [[</s>]]
     end
@@ -63,7 +63,6 @@ end
 
 function _build_html_page(cmark, docdir, title, db, sidebar, opt)
     opt = opt or {}
-
     local locale = opt.locale or "en-us"
     local page = docdir .. ".html"
     local isindex = false
@@ -72,10 +71,8 @@ function _build_html_page(cmark, docdir, title, db, sidebar, opt)
         isindex = true
     end
     local outputfile = path.join(opt.outputdir or "", locale, page)
-
     local siteroot = opt.siteroot
     local interfaces = "Interfaces" -- TODO change with language
-
     local sitemap = io.open(outputfile, 'w')
     sitemap:write(string.format([[
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
@@ -94,10 +91,9 @@ function _build_html_page(cmark, docdir, title, db, sidebar, opt)
 <div id="content">
 ]], siteroot, siteroot, title, sidebar))
 
-    local docroot = path.join(os.projectdir(), "doc", locale)
-
     local isfirst = true
     local apientries = {}
+    local docroot = path.join(os.projectdir(), "doc", locale)
     for _, apientryfile in ipairs(os.files(path.join(docroot, docdir, "*.md"))) do
 
         if path.filename(apientryfile):startswith("_") then
