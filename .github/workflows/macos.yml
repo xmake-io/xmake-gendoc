@@ -23,5 +23,5 @@ jobs:
 
       - name: Tests
         run: |
-          xmake gendoc
+          xmake gendoc -y
 
