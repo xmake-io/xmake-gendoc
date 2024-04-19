@@ -182,12 +182,11 @@ end
 function _build_html_pages(cmark, opt)
     opt = opt or {}
     os.tryrm(opt.outputdir)
-    for _, dir in ipairs(os.dirs(path.join(os.projectdir(), "doc", "*"))) do
-        opt.locale = path.basename(dir)
-
+    for _, pagefile in ipairs(os.files(path.join(os.projectdir(), "doc", "*", "pages.lua"))) do
+        opt.locale = path.basename(path.directory(pagefile))
         local sidebar = ""
         local db = _make_db(opt.locale)
-        local pagesgroups = io.load(path.join(os.projectdir(), "doc", opt.locale, "pages.lua"))
+        local pagesgroups = io.load(pagefile)
         for _, pagegroup in ipairs(pagesgroups) do
             sidebar = sidebar .. "\n<p>" .. pagegroup.title .. "</p>\n<ul>\n"
             for _, page in ipairs(pagegroup.pages) do
@@ -201,6 +200,10 @@ function _build_html_pages(cmark, opt)
                 _build_html_page(cmark, page.docdir, page.title, db, sidebar, opt)
             end
         end
+    end
+    for _, htmlfile in ipairs(os.files(path.join(os.projectdir(), "doc", "*.html"))) do
+        os.trycp(htmlfile, opt.outputdir)
+        io.gsub(path.join(opt.outputdir, path.filename(htmlfile)), "%${siteroot}", opt.siteroot)
     end
     os.trycp(path.join(os.projectdir(), "resources", "*"), opt.outputdir)
 end
