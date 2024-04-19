@@ -15,17 +15,12 @@
 -- Copyright (C) 2015-present, TBOOX Open Source Group.
 --
 -- @author      charlesseizilles
--- @file        build.lua
+-- @file        gendoc.lua
 --
 
 -- imports
 import("core.base.option")
-import("modules.shared.cmark")
-
-local options = {
-    {'o', "outputdir",   "kv", nil, "Output html directory. (default is ./html)"},
-    {'s', "siteroot", "kv", nil, "Site root. (default is https://xmake.io)"}
-}
+import("shared.cmark")
 
 function _load_file_metadata(filecontent)
     local apientry = {}
@@ -37,7 +32,7 @@ end
 
 function _make_db(locale)
     local db = {}
-    for _, apientryfile in ipairs(os.files(path.join(os.scriptdir(), "doc", locale, "*/**.md"))) do
+    for _, apientryfile in ipairs(os.files(path.join(os.projectdir(), "doc", locale, "*/**.md"))) do
         local apientrydata = io.readfile(apientryfile)
         local apientry = _load_file_metadata(apientrydata)
         if apientry.key then
@@ -99,7 +94,7 @@ function _build_html_page(cmark, docdir, title, db, sidebar, opt)
 <div id="content">
 ]], siteroot, siteroot, title, sidebar))
 
-    local docroot = path.join(os.scriptdir(), "doc", locale)
+    local docroot = path.join(os.projectdir(), "doc", locale)
 
     local isfirst = true
     local apientries = {}
@@ -187,12 +182,12 @@ end
 function _build_html_pages(cmark, opt)
     opt = opt or {}
     os.tryrm(opt.outputdir)
-    for _, dir in ipairs(os.dirs(path.join(os.scriptdir(), "doc", "*"))) do
+    for _, dir in ipairs(os.dirs(path.join(os.projectdir(), "doc", "*"))) do
         opt.locale = path.basename(dir)
 
         local sidebar = ""
         local db = _make_db(opt.locale)
-        local pagesgroups = io.load(path.join(os.scriptdir(), "doc", opt.locale, "pages.lua"))
+        local pagesgroups = io.load(path.join(os.projectdir(), "doc", opt.locale, "pages.lua"))
         for _, pagegroup in ipairs(pagesgroups) do
             sidebar = sidebar .. "\n<p>" .. pagegroup.title .. "</p>\n<ul>\n"
             for _, page in ipairs(pagegroup.pages) do
@@ -207,20 +202,18 @@ function _build_html_pages(cmark, opt)
             end
         end
     end
-    os.trycp(path.join(os.scriptdir(), "resources", "*"), opt.outputdir)
+    os.trycp(path.join(os.projectdir(), "resources", "*"), opt.outputdir)
 end
 
-function main(...)
-    local argv = {...}
-    local opt  = option.parse(argv, options, "Generate the API documentation."
-                                           , ""
-                                           , "Usage: xmake l build.lua [options]")
-
-    opt.outputdir = path.absolute(opt.outputdir or path.join("html"))
-    opt.siteroot = opt.siteroot or "https://xmake.io"
-    if not opt.siteroot:startswith("http") then
-        opt.siteroot = path.absolute(opt.siteroot)
+function main()
+    local outputdir = path.absolute(option.get("outputdir") or path.join("html"))
+    local siteroot = option.get("siteroot") or "https://xmake.io"
+    if not siteroot:startswith("http") then
+        siteroot = path.absolute(siteroot)
     end
 
-    _build_html_pages(cmark, opt)
+    _build_html_pages(cmark, {outputdir = outputdir, siteroot = siteroot})
+
+    cprint("Generated document: ${bright}%s${clear}", outputdir)
+    cprint("Siteroot: ${bright}%s${clear}", siteroot)
 end

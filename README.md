@@ -4,17 +4,29 @@ This repository contains xmake's documentation (work in progress) and a [script]
 
 ## How to build
 
+### Local test
+
 To generate the pages, you need to call the following command in this repository root:
 
-`xmake l build.lua -o ./outputDirectory`
-
-The pages will be linked with each other by using absolute URLs. The default URL base is `https://xmake.io`. It can be changed by using the -s (--siteroot) option.
-ie.:
-`xmake l build.lua -s https://my-xmake-fork.com`
+```bash
+$ xmake gendoc -s ./html
+$ open html/en-us/index.html
+```
 
 If you specify the same absolute path for both the -o (--output) and -s options, you can easily test the links in local in your browser without the need to setup a server.
 ie.:
-`xmake l build.lua -o C:/Users/Me/Desktop/xmakedoc -s C:/Users/Me/Desktop/xmakedoc`
+`xmake gendoc -o C:/Users/Me/Desktop/xmakedoc -s C:/Users/Me/Desktop/xmakedoc`
+
+### Deploy release site
+
+```bash
+$ xmake gendoc
+$ open https://xmake.io
+```
+
+The pages will be linked with each other by using absolute URLs. The default URL base is `https://xmake.io`. It can be changed by using the -s (--siteroot) option.
+ie.:
+`xmake gendoc -s https://my-xmake-fork.com`
 
 ## How to contribute
 
