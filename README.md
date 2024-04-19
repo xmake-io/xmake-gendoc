@@ -10,12 +10,20 @@ To generate the pages, you need to call the following command in this repository
 
 ```bash
 $ xmake gendoc -s ./html
-$ open html/en-us/index.html
 ```
 
 If you specify the same absolute path for both the -o (--output) and -s options, you can easily test the links in local in your browser without the need to setup a server.
 ie.:
-`xmake gendoc -o C:/Users/Me/Desktop/xmakedoc -s C:/Users/Me/Desktop/xmakedoc`
+
+```bash
+$ xmake gendoc -o C:/Users/Me/Desktop/xmakedoc -s C:/Users/Me/Desktop/xmakedoc
+```
+
+Open the generated html page to test it.
+
+```bash
+$ xmake opendoc
+```
 
 ### Deploy release site
 
@@ -26,7 +34,10 @@ $ open https://xmake.io
 
 The pages will be linked with each other by using absolute URLs. The default URL base is `https://xmake.io`. It can be changed by using the -s (--siteroot) option.
 ie.:
-`xmake gendoc -s https://my-xmake-fork.com`
+
+```bash
+$ xmake gendoc -s https://my-xmake-fork.com
+```
 
 ## How to contribute
 
