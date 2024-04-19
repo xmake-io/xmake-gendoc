@@ -1,4 +1,4 @@
---!A cross-platform build utility based on Lua
+--!A cross-platform document build utility based on Lua
 --
 -- Licensed under the Apache License, Version 2.0 (the "License");
 -- you may not use this file except in compliance with the License.
@@ -23,7 +23,7 @@ import("core.base.option")
 import("modules.shared.cmark")
 
 local options = {
-    {'o', "output",   "kv", nil, "Output html directory. (default is ./html)"},
+    {'o', "outputdir",   "kv", nil, "Output html directory. (default is ./html)"},
     {'s', "siteroot", "kv", nil, "Site root. (default is https://xmake.io)"}
 }
 
@@ -42,7 +42,6 @@ function _make_db(locale)
         local apientry = _load_file_metadata(apientrydata)
         if apientry.key then
             assert(db[apientry.key] == nil, "keys must be unique (" .. apientry.key .. " was already inserted)")
-
             db[apientry.key] = apientry
         end
     end
@@ -79,7 +78,7 @@ function _build_html_page(cmark, docdir, title, db, sidebar, opt)
     end
     local outputfile = path.join(opt.outputdir or "", locale, page)
 
-    local siteroot = opt.siteroot or "https://xmake.io"
+    local siteroot = opt.siteroot
     local interfaces = "Interfaces" -- TODO change with language
 
     local sitemap = io.open(outputfile, 'w')
@@ -187,40 +186,30 @@ end
 
 function _build_html_pages(cmark, opt)
     opt = opt or {}
-
-    local buildopt = {
-        outputdir = opt.output or path.join("html"),
-        siteroot = opt.siteroot or "https://xmake.io",
-    }
-
-    if os.isdir(buildopt.outputdir) then
-        raise("the output folder '" .. buildopt.outputdir .. "' already exists and is not empty")
-    end
-
+    os.tryrm(opt.outputdir)
     for _, dir in ipairs(os.dirs(path.join(os.scriptdir(), "doc", "*"))) do
-        buildopt.locale = path.basename(dir)
+        opt.locale = path.basename(dir)
 
-        local db = _make_db(buildopt.locale)
+        local db = _make_db(opt.locale)
 
-        local pagesgroups = import("doc." .. buildopt.locale .. ".pages")()
+        local pagesgroups = import("doc." .. opt.locale .. ".pages")()
 
         local sidebar = ""
         for _, pagegroup in ipairs(pagesgroups) do
             sidebar = sidebar .. "\n<p>" .. pagegroup.title .. "</p>\n<ul>\n"
             for _, page in ipairs(pagegroup.pages) do
-                sidebar = sidebar .. [[<li><a href="]] .. buildopt.siteroot .. '/' .. buildopt.locale .. '/' .. page.path .. [[">]] .. page.title .. "</a></li>\n"
+                sidebar = sidebar .. [[<li><a href="]] .. opt.siteroot .. '/' .. opt.locale .. '/' .. page.path .. [[">]] .. page.title .. "</a></li>\n"
             end
             sidebar = sidebar .. "</ul>\n"
         end
 
         for _, pagegroup in ipairs(pagesgroups) do
             for _, page in ipairs(pagegroup.pages) do
-                _build_html_page(cmark, page.docdir, page.title, db, sidebar, buildopt)
+                _build_html_page(cmark, page.docdir, page.title, db, sidebar, opt)
             end
         end
     end
-
-    os.trycp(path.join(os.scriptdir(), "resources", "*"), buildopt.outputdir)
+    os.trycp(path.join(os.scriptdir(), "resources", "*"), opt.outputdir)
 end
 
 function main(...)
@@ -228,6 +217,12 @@ function main(...)
     local opt  = option.parse(argv, options, "Generate the API documentation."
                                            , ""
                                            , "Usage: xmake l build.lua [options]")
+
+    opt.outputdir = path.absolute(opt.outputdir or path.join("html"))
+    opt.siteroot = opt.siteroot or "https://xmake.io"
+    if not opt.siteroot:startswith("http") then
+        opt.siteroot = path.absolute(opt.siteroot)
+    end
 
     _build_html_pages(cmark, opt)
 end

@@ -1,4 +1,3 @@
-
 # xmake-gendoc
 
 This repository contains xmake's documentation (work in progress) and a [script](build.lua) that generates a static HTML website from it.
