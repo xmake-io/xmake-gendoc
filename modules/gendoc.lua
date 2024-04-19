@@ -32,12 +32,19 @@ end
 
 function _make_db(locale)
     local db = {}
-    for _, apientryfile in ipairs(os.files(path.join(os.projectdir(), "doc", locale, "*/**.md"))) do
-        local apientrydata = io.readfile(apientryfile)
-        local apientry = _load_file_metadata(apientrydata)
-        if apientry.key then
-            assert(db[apientry.key] == nil, "keys must be unique (" .. apientry.key .. " was already inserted)")
-            db[apientry.key] = apientry
+    local docroot = path.join(os.projectdir(), "doc", locale)
+    local pagesgroups = io.load(path.join(docroot, "pages.lua"))
+    for _, pagegroup in ipairs(pagesgroups) do
+        for _, page in ipairs(pagegroup.pages) do
+            for _, apientryfile in ipairs(os.files(path.join(docroot, page.docdir, "*.md"))) do
+                local apientrydata = io.readfile(apientryfile)
+                local apientry = _load_file_metadata(apientrydata)
+                if apientry.key then
+                    assert(db[apientry.key] == nil, "keys must be unique (" .. apientry.key .. " was already inserted)")
+                    db[apientry.key] = apientry
+                    db[apientry.key].page = page
+                end
+            end
         end
     end
     return db
@@ -47,19 +54,19 @@ function _join_link(...)
     return table.concat(table.pack(...), "/")
 end
 
-function _make_anchor(db, key, page, locale, siteroot)
-    assert(db and key and page and locale and siteroot)
+function _make_anchor(db, key, locale, siteroot)
+    assert(db and key and locale and siteroot)
     if db[key] then
-        return [[<a href="]] .. _join_link(siteroot, locale, page) .. '#' .. db[key].key .. [[" id="]] .. db[key].key .. [[">]] .. db[key].name .. [[</a>]]
+        return [[<a href="]] .. _join_link(siteroot, locale, db[key].page.docdir .. ".html") .. '#' .. db[key].key .. [[" id="]] .. db[key].key .. [[">]] .. db[key].name .. [[</a>]]
     else
         return [[<s>]] .. key .. [[</s>]]
     end
 end
 
-function _make_link(db, key, page, locale, siteroot)
-    assert(db and key and page and locale and siteroot)
+function _make_link(db, key, locale, siteroot)
+    assert(db and key and locale and siteroot)
     if db[key] then
-        return [[<a href="]] .. _join_link(siteroot, locale, page) .. '#' .. db[key].key .. [[">]] .. db[key].name .. [[</a>]]
+        return [[<a href="]] .. _join_link(siteroot, locale, db[key].page.docdir .. ".html") .. '#' .. db[key].key .. [[">]] .. db[key].name .. [[</a>]]
     else
         return [[<s>]] .. key .. [[</s>]]
     end
@@ -131,7 +138,7 @@ function _build_html_page(cmark, docdir, title, db, sidebar, opt)
             if anchorstart == nil then break end
 
             local anchor = htmldata:sub(anchorstart + 9, anchorend - 1)
-            htmldata = htmldata:gsub("%${anchor:[%w_]+}", _make_anchor(db, anchor, page, locale, siteroot), 1)
+            htmldata = htmldata:gsub("%${anchor:[%w_]+}", _make_anchor(db, anchor, locale, siteroot), 1)
         until not anchorstart
 
         local linkstart, linkend
@@ -140,7 +147,7 @@ function _build_html_page(cmark, docdir, title, db, sidebar, opt)
             if linkstart == nil then break end
 
             local link = htmldata:sub(linkstart + 7, linkend - 1)
-            htmldata = htmldata:gsub("%${link:[%w_]+}", _make_link(db, link, page, locale, siteroot), 1)
+            htmldata = htmldata:gsub("%${link:[%w_]+}", _make_link(db, link, locale, siteroot), 1)
         until not linkstart
 
         sitemap:write(htmldata)
@@ -161,7 +168,7 @@ function _build_html_page(cmark, docdir, title, db, sidebar, opt)
 
         for _, apientry in ipairs(apientries) do
             if apientry.isapi then
-                sitemap:write("        <tr><td>" .. _make_link(db, apientry.key, page, locale, siteroot) .. "</td></tr>\n")
+                sitemap:write("        <tr><td>" .. _make_link(db, apientry.key, locale, siteroot) .. "</td></tr>\n")
             end
         end
 
@@ -190,7 +197,7 @@ function _build_html_pages(cmark, opt)
         for _, pagegroup in ipairs(pagesgroups) do
             sidebar = sidebar .. "\n<p>" .. pagegroup.title .. "</p>\n<ul>\n"
             for _, page in ipairs(pagegroup.pages) do
-                sidebar = sidebar .. [[<li><a href="]] .. opt.siteroot .. '/' .. opt.locale .. '/' .. page.path .. [[">]] .. page.title .. "</a></li>\n"
+                sidebar = sidebar .. [[<li><a href="]] .. opt.siteroot .. '/' .. opt.locale .. '/' .. page.docdir .. [[.html">]] .. page.title .. "</a></li>\n"
             end
             sidebar = sidebar .. "</ul>\n"
         end

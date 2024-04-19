@@ -30,10 +30,10 @@ Support hosts:
 * "linux"
 * "macosx"
 
-We can also get it from ${link:var_host} [$(host)](/manual/builtin_variables?id=varhost) or ${link:os_host} [os.host](/manual/builtin_modules?id=oshost).
+We can also get it from ${link:var_host} or ${link:os_host}.
 
 #### Introduced in version 2.1.4
 
 #### See also
 
-${link:is_arch}, ${link:is_os}, ${link:is_plat}, ${link:is_subhost}
+${link:var_host}, ${link:is_arch}, ${link:is_os}, ${link:is_plat}, ${link:is_subhost}

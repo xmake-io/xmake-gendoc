@@ -47,7 +47,7 @@ Each page on the generated site is built by concatenating rendered markdown file
 
 The pages are defined in [doc/en-us/pages.lua](doc/en-us/pages.lua) (for american english pages). The pages are groupped by category, so that they are easily distinguished in the site left sidebar.
 
-A page is defined by a path (where the html file will be generated), a title (the page's tab title and displayed name in the site left sidebar), and a docdir. The docdir is the path to the directory that contains the markdown files used to fill the page's content. The paths are relative to the localization directory. For american english, docdir is relative to `doc/en-us`.
+A page is defined by a title (the page's tab title and displayed name in the site left sidebar), and a docdir. The docdir is the path to the directory that contains the markdown files used to fill the page's content. The paths are relative to the localization directory. For american english, docdir is relative to `doc/en-us`.
 
 Localization directories can be added, they will automatically be discovered and added to the generated site on build.
 Localization directories are completely independent from each other.
