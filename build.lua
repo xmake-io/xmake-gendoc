@@ -20,7 +20,7 @@
 
 -- imports
 import("core.base.option")
-import("core.sandbox.module")
+import("modules.shared.cmark")
 
 local options = {
     {'o', "output",   "kv", nil, "Output html directory. (default is ./html)"},
@@ -28,19 +28,15 @@ local options = {
 }
 
 function _load_file_metadata(filecontent)
-
-    local pattern = "%-%-%-\nisapi: ([%w%p]+)\nkey: ([%w%p]+)\nname: (.+)\n%-%-%-"
-
     local apientry = {}
+    local pattern = "%-%-%-\nisapi: ([%w%p]+)\nkey: ([%w%p]+)\nname: (.+)\n%-%-%-"
     apientry.isapi, apientry.key, apientry.name = filecontent:match(pattern)
     local metadatastart, metadataend = filecontent:find(pattern)
-
     return apientry, metadatastart, metadataend
 end
 
 function _make_db(locale)
     local db = {}
-
     for _, apientryfile in ipairs(os.files(path.join(os.scriptdir(), "doc", locale, "*/**.md"))) do
         local apientrydata = io.readfile(apientryfile)
         local apientry = _load_file_metadata(apientrydata)
@@ -50,7 +46,6 @@ function _make_db(locale)
             db[apientry.key] = apientry
         end
     end
-
     return db
 end
 
@@ -228,17 +223,11 @@ function _build_html_pages(cmark, opt)
     os.trycp(path.join(os.scriptdir(), "resources", "*"), buildopt.outputdir)
 end
 
--- main entry
 function main(...)
-
-    -- parse arguments
     local argv = {...}
     local opt  = option.parse(argv, options, "Generate the API documentation."
                                            , ""
-                                           , "Usage: xmake l gendoc [options]")
-
-    module.add_directories(path.join(os.scriptdir(), "modules"))
-    local cmark = module.import("shared.cmark")
+                                           , "Usage: xmake l build.lua [options]")
 
     _build_html_pages(cmark, opt)
 end
