@@ -273,7 +273,7 @@ function main()
     local outputdir = path.absolute(option.get("outputdir"))
     local siteroot = option.get("siteroot")
     if not siteroot:startswith("http") then
-        siteroot = path.absolute(siteroot)
+        siteroot = "file://" .. path.absolute(siteroot)
     end
     if #siteroot > 1 and siteroot:endswith("/") then
         siteroot = siteroot:sub(1, -2)
