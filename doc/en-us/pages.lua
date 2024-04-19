@@ -10,7 +10,7 @@
         },
     },
     {
-        title = "API Manual (Description Scope)", -- "API手册（描述域）",
+        title = "API Manual (Description Scope)",
         pages = {
             {
                 path = "api/conditions.html",
