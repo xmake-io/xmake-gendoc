@@ -2,6 +2,8 @@
 
 This repository contains xmake's documentation (work in progress) and a [script](build.lua) that generates a static HTML website from it.
 
+see [Online Docs](https://xmake-io.github.io/xmake-gendoc/index.html)
+
 ## How to build
 
 ### Local test
