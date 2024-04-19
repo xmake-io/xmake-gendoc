@@ -10,11 +10,10 @@ jobs:
       fail-fast: false
       matrix:
         os: [windows-latest]
-        kind: [static, shared]
 
     runs-on: ${{ matrix.os }}
     concurrency:
-        group: ${{ github.ref }}-${{ github.base_ref }}-${{ github.head_ref }}-${{ matrix.os }}-${{ matrix.kind }}-Windows
+        group: ${{ github.ref }}-${{ github.base_ref }}-${{ github.head_ref }}-${{ matrix.os }}-Windows
         cancel-in-progress: true
     steps:
       - uses: actions/checkout@v1

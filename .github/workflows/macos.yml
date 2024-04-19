@@ -9,11 +9,10 @@ jobs:
     strategy:
       matrix:
         os: [macOS-latest]
-        kind: [static, shared]
 
     runs-on: ${{ matrix.os }}
     concurrency:
-        group: ${{ github.ref }}-${{ github.base_ref }}-${{ github.head_ref }}-${{ matrix.kind }}-macOS
+        group: ${{ github.ref }}-${{ github.base_ref }}-${{ github.head_ref }}-macOS
         cancel-in-progress: true
     steps:
       - uses: actions/checkout@v1
