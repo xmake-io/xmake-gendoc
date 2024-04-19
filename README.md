@@ -12,11 +12,11 @@ To generate the pages, you need to call the following command in this repository
 $ xmake gendoc -s ./html
 ```
 
-If you specify the same absolute path for both the -o (--output) and -s options, you can easily test the links in local in your browser without the need to setup a server.
+If you specify the same absolute path for both the -o (--outputdir) and -s options, you can easily test the links in local in your browser without the need to setup a server.
 ie.:
 
 ```bash
-$ xmake gendoc -o C:/Users/Me/Desktop/xmakedoc -s C:/Users/Me/Desktop/xmakedoc
+$ xmake gendoc -o /tmp/xmakedoc -s /tmp/xmakedoc
 ```
 
 Open the generated html page to test it.
