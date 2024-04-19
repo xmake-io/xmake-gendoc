@@ -6,8 +6,18 @@ task("gendoc")
         usage = "xmake gendoc [options] [arguments]",
         description = "Generate the xmake documents.",
         options = {
-            {'o', "outputdir",   "kv", nil, "Output html directory. (default is ./html)"},
-            {'s', "siteroot", "kv", nil, "Site root. (default is https://xmake.io)"}
+            {'o', "outputdir", "kv", "html", "Output html directory."},
+            {'s', "siteroot",  "kv", "https://xmake.io", "Site root."}
+        }
+    }
+
+task("opendoc")
+    on_run("opendoc")
+    set_menu {
+        usage = "xmake opendoc [options] [arguments]",
+        description = "Open the local xmake documents.",
+        options = {
+            {nil, "htmldir", "kv", "html", "The documents html directory."},
         }
     }
 

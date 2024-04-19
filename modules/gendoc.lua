@@ -206,8 +206,8 @@ function _build_html_pages(cmark, opt)
 end
 
 function main()
-    local outputdir = path.absolute(option.get("outputdir") or path.join("html"))
-    local siteroot = option.get("siteroot") or "https://xmake.io"
+    local outputdir = path.absolute(option.get("outputdir"))
+    local siteroot = option.get("siteroot")
     if not siteroot:startswith("http") then
         siteroot = path.absolute(siteroot)
     end
