@@ -44,7 +44,7 @@ function _make_db(locale)
 end
 
 function _join_link(...)
-    return path.unix(path.join(...)):gsub("//", "/")
+    return table.concat(table.pack(...), "/")
 end
 
 function _make_anchor(db, key, page, locale, siteroot)
