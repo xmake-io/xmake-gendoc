@@ -41,7 +41,7 @@ function _load_apimetadata(filecontent, opt)
             table.insert(content, line)
         end
     end
-    if apimetadata.api then
+    if apimetadata.api and type(apimetadata.api) == "string" then
         for idx, line in ipairs(content) do
             if line:startswith("### ") then
                 table.insert(content, idx + 1, "`" .. apimetadata.api .. "`")
@@ -175,7 +175,7 @@ function _write_api(sitemap, db, locale, siteroot, apimetalist, apientrydata)
 
     local htmldata = cmark.md2html(content)
 
-    assert(apimetadata.isapi ~= nil, "entry isapi is nil value")
+    assert(apimetadata.api ~= nil, "entry api is nil value")
     assert(apimetadata.key ~= nil, "entry key is nil value")
     assert(apimetadata.name ~= nil, "entry name is nil value")
     table.insert(apimetalist, apimetadata)
@@ -212,7 +212,7 @@ function _write_table_of_content(sitemap, db, locale, siteroot, apimetalist)
     <tbody id="toc-body">]] .. "\n", interfaces))
 
         for _, apimetadata in ipairs(apimetalist) do
-            if apimetadata.isapi then
+            if apimetadata.api then
                 sitemap:write("        <tr><td>" .. _make_link(db, apimetadata.key, locale, siteroot) .. "</td></tr>\n")
             end
         end
