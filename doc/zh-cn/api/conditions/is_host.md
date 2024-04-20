@@ -1,16 +1,14 @@
 ---
-isapi: true
 key: is_host
 name: is_host
+api: bool is_host(string host, ...)
 refer: is_arch, is_os, is_plat, is_subhost
 version: 2.1.4
 ---
 
 ### ${anchor:is_host}
 
-是否为当前的编译主机系统
-
-`bool is_host(string host, ...)`
+#### 是否为当前的编译主机系统
 
 如果匹配当前的主机系统，那么返回 true，否则返回 false。
 

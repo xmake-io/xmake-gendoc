@@ -1,14 +1,14 @@
 ---
-isapi: true
 key: is_mode
 name: is_mode
+api: bool is_mode(string mode, ...)
+version: 2.0.1
+refer: is_config, var_mode, os_is_mode
 ---
 
 ### ${anchor:is_mode}
 
-Is the current compilation mode
-
-`bool is_mode(string mode, ...)`
+#### Is the current compilation mode
 
 You can use this api to check the configuration command: `xmake f -m debug`
 
@@ -58,8 +58,3 @@ if ${link:is_mode}("release", "profile") then
 end
 ```
 
-#### Introduced in version 2.0.1
-
-#### See also
-
-${link:is_config}, ${link:var_mode}, ${link:os_is_mode}

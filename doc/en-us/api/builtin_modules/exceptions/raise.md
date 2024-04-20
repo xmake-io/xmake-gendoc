@@ -1,5 +1,5 @@
 ---
-isapi: true
+api: true
 key: raise
 name: raise
 ---

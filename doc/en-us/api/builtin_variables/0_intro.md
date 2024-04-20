@@ -1,5 +1,5 @@
 ---
-isapi: false
+api: false
 key: builtin_variables_intro
 name: built-in variables
 ---

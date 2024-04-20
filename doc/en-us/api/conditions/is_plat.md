@@ -1,14 +1,13 @@
 ---
-isapi: true
 key: is_plat
 name: is_plat
+api: bool is_plat(string plat, ...)
+refer: is_arch, is_host, is_mode, is_os
 ---
 
 ### ${anchor:is_plat}
 
-Is the current compilation platform
-
-`bool is_plat(string plat, ...)`
+#### Is the current compilation platform
 
 Returns true if the current compilation platform is the one specified with *plat*. Returns false otherwise.
 
@@ -35,8 +34,3 @@ Support platforms:
 * "iphoneos"
 * "watchos"
 
-#### Introduced in version 2.0.1
-
-#### See also
-
-${link:is_arch}, ${link:is_host}, ${link:is_mode}, ${link:is_os}

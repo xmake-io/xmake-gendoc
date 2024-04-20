@@ -1,14 +1,14 @@
 ---
-isapi: true
 key: is_host
 name: is_host
+api: bool is_host(string host, ...)
+version: 2.1.4
+refer: var_host, is_arch, is_os, is_plat, is_subhost
 ---
 
 ### ${anchor:is_host}
 
-Is the current compilation host system
-
-`bool is_host(string host, ...)`
+#### Is the current compilation host system
 
 Returns true if the current compilation host system is the one specified with *host*. Returns false otherwise.
 
@@ -31,9 +31,3 @@ Support hosts:
 * "macosx"
 
 We can also get it from ${link:var_host} or ${link:os_host}.
-
-#### Introduced in version 2.1.4
-
-#### See also
-
-${link:var_host}, ${link:is_arch}, ${link:is_os}, ${link:is_plat}, ${link:is_subhost}

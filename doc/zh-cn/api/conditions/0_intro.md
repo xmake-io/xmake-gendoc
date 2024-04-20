@@ -1,5 +1,5 @@
 ---
-isapi: false
+api: false
 key: conditions_intro
 name: 条件判断
 ---

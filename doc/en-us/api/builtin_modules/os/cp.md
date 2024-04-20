@@ -1,14 +1,14 @@
 ---
-isapi: true
 key: os_cp
 name: os.cp
+api: nil os.cp(string src, string dst, table opt)
+version: 2.0.1
+refer: os_trycp
 ---
 
 ### ${anchor:os_cp}
 
-Copy files or directories
-
-`nil os.cp(string src, string dst, table opt)`
+#### Copy files or directories
 
 The behavior is similar to the `cp` command in the shell, supporting path wildcard matching (using lua pattern matching), support for multi-file copying, and built-in variable support.
 
@@ -53,8 +53,3 @@ Under 2.5.7, the parameter `{symlink = true}` is added to keep the symbolic link
 ${link:os_cp}("/xxx/foo", "/xxx/bar", {symlink = true})
 ```
 
-#### Introduced in version 2.0.1
-
-#### See also
-
-${link:os_trycp}

@@ -1,5 +1,5 @@
 ---
-isapi: false
+api: false
 key: exceptions_intro
 name: try-catch-finally
 ---

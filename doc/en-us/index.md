@@ -1,5 +1,5 @@
 ---
-isapi: false
+api: false
 key: index
 name: index
 ---

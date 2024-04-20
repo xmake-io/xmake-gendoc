@@ -1,14 +1,14 @@
 ---
-isapi: true
 key: is_os
 name: is_os
+api: bool is_os(string os, ...)
+version: 2.0.1
+refer: var_os, is_arch, is_host, is_mode, is_plat
 ---
 
 ### ${anchor:is_os}
 
-Is the current compilation target system
-
-`bool is_os(string os, ...)`
+#### Is the current compilation target system
 
 Returns true if the target compilation os is the one specified with *os*. Returns false otherwise.
 
@@ -26,8 +26,3 @@ Valid input values are:
 * "macosx"
 * "ios"
 
-#### Introduced in version 2.0.1
-
-#### See also
-
-${link:var_os}, ${link:is_arch}, ${link:is_host}, ${link:is_mode}, ${link:is_plat}

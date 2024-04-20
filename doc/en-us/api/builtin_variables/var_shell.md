@@ -1,12 +1,14 @@
 ---
-isapi: true
+api: true
 key: var_shell
 name: ${shell}
+version: 2.0.1
+refer: os_shell
 ---
 
 ### ${anchor:var_shell}
 
-Executing external shell commands
+#### Executing external shell commands
 
 In addition to the built-in variable handling, xmake also supports the native shell to handle some of the features that xmake does not support.
 
@@ -24,8 +26,3 @@ Xmake has its own automated third library detection mechanism, which generally d
 
 But this example shows that xmake can be used with some third-party tools through the native shell.
 
-#### Introduced in version 2.0.1
-
-#### See also
-
-${link:os_shell}

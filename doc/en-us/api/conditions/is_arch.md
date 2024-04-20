@@ -1,5 +1,4 @@
 ---
-isapi: true
 key: is_arch
 name: is_arch
 api: bool is_arch(string arch, ...)
