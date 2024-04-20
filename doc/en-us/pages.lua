@@ -1,31 +1,35 @@
 {
-    {
-        title = "index",
-        pages = {
-            {
-                path = "index.html",
-                docdir = ".",
-                title = "index",
+    name = "English",
+    flag = "🇬🇧",
+    categories = {
+        {
+            title = "index",
+            pages = {
+                {
+                    docdir = ".",
+                    title = "index",
+                },
             },
         },
-    },
-    {
-        title = "API Manual (Description Scope)",
-        pages = {
-            {
-                path = "api/conditions.html",
-                docdir = "api/conditions",
-                title = "Conditions",
-            },
-            {
-                path = "api/builtin_modules/exceptions.html",
-                docdir = "api/builtin_modules/exceptions",
-                title = "Exceptions",
-            },
-            {
-                path = "api/builtin_modules/os.html",
-                docdir = "api/builtin_modules/os",
-                title = "os",
+        {
+            title = "API Manual (Description Scope)",
+            pages = {
+                {
+                    docdir = "api/builtin_variables",
+                    title = "Built-in variables",
+                },
+                {
+                    docdir = "api/conditions",
+                    title = "Conditions",
+                },
+                {
+                    docdir = "api/builtin_modules/exceptions",
+                    title = "Exceptions",
+                },
+                {
+                    docdir = "api/builtin_modules/os",
+                    title = "os",
+                },
             },
         },
     },

@@ -30,4 +30,4 @@ Valid input values are:
 
 #### See also
 
-${link:is_arch}, ${link:is_host}, ${link:is_mode}, ${link:is_plat}
+${link:var_os}, ${link:is_arch}, ${link:is_host}, ${link:is_mode}, ${link:is_plat}

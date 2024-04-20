@@ -20,13 +20,13 @@ Valid fields for `opt` are:
 e.g:
 
 ```lua
-${link:os_cp}("$(scriptdir)/*.h", "$(buildir)/inc")
-${link:os_cp}("$(projectdir)/src/test/**.h", "$(buildir)/inc")
+${link:os_cp}("${link:var_scriptdir}/*.h", "${link:var_buildir}/inc")
+${link:os_cp}("${link:var_projectdir}/src/test/**.h", "${link:var_buildir}/inc")
 ```
 
 The above code will: all the header files in the current `xmake.lua` directory, the header files in the project source test directory are all copied to the `$(buildir)` output directory.
 
-Among them `$(scriptdir)`, `$(projectdir)` These variables are built-in variables of xmake. For details, see the related documentation of [built-in variables](#built-in variables).
+Among them `${link:var_scriptdir}`, `${link:var_projectdir}` These variables are built-in variables of xmake. For details, see the related documentation of ${link:builtin_variables_intro}.
 
 The matching patterns in `*.h` and `**.h` are similar to those in [add_files](#targetadd_files), the former is a single-level directory matching, and the latter is a recursive multi-level directory matching.
 
@@ -34,7 +34,7 @@ This interface also supports `recursive replication' of directories, for example
 
 ```lua
 -- Recursively copy the current directory to a temporary directory
-${link:os_cp}("$(curdir)/test/", "$(tmpdir)/test")
+${link:os_cp}("${link:var_curdir}/test/", "${link:var_tmpdir}/test")
 ```
 
 The copy at the top will expand and copy all files to the specified directory, and lose the source directory hierarchy. If you want to copy according to the directory structure that maintains it, you can set the rootdir parameter:
