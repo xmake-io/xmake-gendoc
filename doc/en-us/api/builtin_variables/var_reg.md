@@ -11,7 +11,7 @@ Get the value of the windows registry configuration item
 Get the value of an item in the registry by `regpath; name`:
 
 ```lua
-${print}("$(reg HKEY_LOCAL_MACHINE\\SOFTWARE\\Microsoft\\Windows NT\\CurrentVersion\\XXXX;Name)")
+${link:print}("$(reg HKEY_LOCAL_MACHINE\\SOFTWARE\\Microsoft\\Windows NT\\CurrentVersion\\XXXX;Name)")
 ```
 
 #### Introduced in version 2.1.5

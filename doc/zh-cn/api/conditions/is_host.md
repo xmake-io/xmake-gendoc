@@ -2,6 +2,8 @@
 isapi: true
 key: is_host
 name: is_host
+refer: is_arch, is_os, is_plat, is_subhost
+version: 2.1.4
 ---
 
 ### ${anchor:is_host}
@@ -30,8 +32,3 @@ end
 * "linux"
 * "macosx"
 
-#### 在 2.1.4 版本被引入
-
-#### 相关接口
-
-${link:is_arch}, ${link:is_os}, ${link:is_plat}, ${link:is_subhost}

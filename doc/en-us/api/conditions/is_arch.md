@@ -2,13 +2,17 @@
 isapi: true
 key: is_arch
 name: is_arch
+refer: is_host, is_os, is_plat, is_subarch
+version: 2.0.1
 ---
 
 ### ${anchor:is_arch}
 
-Is the current compilation architecture
+```lua
+bool is_arch(string arch, ...)
+```
 
-`bool is_arch(string arch, ...)`
+#### Is the current compilation architecture
 
 Returns true if the current compilation architecture is the one specified with *arch*. Returns false otherwise.
 
@@ -35,8 +39,3 @@ if ${link:is_arch}("arm.*") then
 end
 ```
 
-#### Introduced in version 2.0.1
-
-#### See also
-
-${link:is_host}, ${link:is_os}, ${link:is_plat}, ${link:is_subarch}

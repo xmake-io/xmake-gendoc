@@ -22,17 +22,55 @@
 import("core.base.option")
 import("shared.cmark")
 
-function _load_file_metadata(filecontent)
-    local apientry = {}
-    local pattern = "%-%-%-\nisapi: ([%w%p]+)\nkey: ([%w%p]+)\nname: (.+)\n%-%-%-"
-    apientry.isapi, apientry.key, apientry.name = filecontent:match(pattern)
-    local metadatastart, metadataend = filecontent:find(pattern)
-    return apientry, metadatastart, metadataend
+function _load_apimetadata(filecontent, opt)
+    opt = opt or {}
+    local content = {}
+    local apimetadata = {}
+    local ismeta = false
+    for idx, line in ipairs(filecontent:split("\n")) do
+        if idx == 1 and line == "---" then
+            ismeta = true
+        elseif ismeta then
+            if line == "---" then
+                ismeta = false
+            else
+                local key, value = line:match("(.+): (.+)")
+                apimetadata[key] = value
+            end
+        else
+            table.insert(content, line)
+        end
+    end
+    if apimetadata.version then
+        local names = {
+            ["en-us"] = "Introduced in version",
+            ["zh-cn"] = "被引入的版本"
+        }
+        local name = names[opt.locale]
+        if name then
+            table.insert(content, "#### " .. name .. " " .. apimetadata.version)
+        end
+    end
+    if apimetadata.refer then
+        local names = {
+            ["en-us"] = "See also",
+            ["zh-cn"] = "参考"
+        }
+        local name = names[opt.locale]
+        if name then
+            table.insert(content, "#### " .. name)
+            local refers = {}
+            for _, line in ipairs(apimetadata.refer:split(",%s+")) do
+                table.insert(refers, "${link:" .. line .. "}")
+            end
+            table.insert(content, table.concat(refers, ", "))
+        end
+    end
+    return apimetadata, table.concat(content, "\n")
 end
 
 function _make_db()
     local db = {}
-
     local docroot = path.join(os.projectdir(), "doc")
     for _, pagefilepath in ipairs(os.files(path.join(os.projectdir(), "doc", "*", "pages.lua"))) do
         local locale = path.basename(path.directory(pagefilepath))
@@ -45,11 +83,11 @@ function _make_db()
                 table.insert(db[locale].pages, page)
                 for _, apientryfile in ipairs(os.files(path.join(localizeddocroot, page.docdir, "*.md"))) do
                     local apientrydata = io.readfile(apientryfile)
-                    local apientry = _load_file_metadata(apientrydata)
-                    if apientry.key then
-                        assert(db[locale].apis[apientry.key] == nil, "keys must be unique (" .. apientry.key .. " was already inserted)")
-                        db[locale].apis[apientry.key] = apientry
-                        db[locale].apis[apientry.key].page = page
+                    local apimetadata = _load_apimetadata(apientrydata, {locale = locale})
+                    if apimetadata.key then
+                        assert(db[locale].apis[apimetadata.key] == nil, "keys must be unique (" .. apimetadata.key .. " was already inserted)")
+                        db[locale].apis[apimetadata.key] = apimetadata
+                        db[locale].apis[apimetadata.key].page = page
                     end
                 end
             end
@@ -123,19 +161,16 @@ function _write_header(sitemap, siteroot, title)
 ]], siteroot, siteroot, title))
 end
 
-function _write_api(sitemap, db, locale, siteroot, apientries, apientrydata)
-    local apientry, metadatastart, metadataend = _load_file_metadata(apientrydata)
-    vprint("apientry", apientry)
+function _write_api(sitemap, db, locale, siteroot, apimetalist, apientrydata)
+    local apimetadata, content = _load_apimetadata(apientrydata, {locale = locale})
+    vprint("apimetadata", apimetadata)
 
-    -- remove the metadata and anything that may be before it
-    apientrydata = apientrydata:sub(metadataend + 1)
+    local htmldata = cmark.md2html(content)
 
-    local htmldata = cmark.md2html(apientrydata)
-
-    assert(apientry.isapi ~= nil, "entry isapi is nil value")
-    assert(apientry.key ~= nil, "entry key is nil value")
-    assert(apientry.name ~= nil, "entry name is nil value")
-    table.insert(apientries, apientry)
+    assert(apimetadata.isapi ~= nil, "entry isapi is nil value")
+    assert(apimetadata.key ~= nil, "entry key is nil value")
+    assert(apimetadata.name ~= nil, "entry name is nil value")
+    table.insert(apimetalist, apimetadata)
 
     local anchorstart, anchorend
     repeat
@@ -158,7 +193,7 @@ function _write_api(sitemap, db, locale, siteroot, apientries, apientrydata)
     sitemap:write(htmldata)
 end
 
-function _write_table_of_content(sitemap, db, locale, siteroot, apientries)
+function _write_table_of_content(sitemap, db, locale, siteroot, apimetalist)
     local interfaces = "Interfaces" -- TODO change with language
     sitemap:write(string.format([[
 <div id="toc">
@@ -168,9 +203,9 @@ function _write_table_of_content(sitemap, db, locale, siteroot, apientries)
     </thead>
     <tbody id="toc-body">]] .. "\n", interfaces))
 
-        for _, apientry in ipairs(apientries) do
-            if apientry.isapi then
-                sitemap:write("        <tr><td>" .. _make_link(db, apientry.key, locale, siteroot) .. "</td></tr>\n")
+        for _, apimetadata in ipairs(apimetalist) do
+            if apimetadata.isapi then
+                sitemap:write("        <tr><td>" .. _make_link(db, apimetadata.key, locale, siteroot) .. "</td></tr>\n")
             end
         end
 
@@ -210,7 +245,7 @@ function _build_html_page(docdir, title, db, sidebar, opt)
 
     sitemap:write('<div id="content">\n')
     local isfirst = true
-    local apientries = {}
+    local apimetalist = {}
     local docroot = path.join(os.projectdir(), "doc", locale)
     for _, apientryfile in ipairs(os.files(path.join(docroot, docdir, "*.md"))) do
         if path.filename(apientryfile):startswith("_") then
@@ -225,14 +260,14 @@ function _build_html_page(docdir, title, db, sidebar, opt)
 
         vprint("loading " .. apientryfile)
         local apientrydata = io.readfile(apientryfile)
-        _write_api(sitemap, db, locale, siteroot, apientries, apientrydata)
+        _write_api(sitemap, db, locale, siteroot, apimetalist, apientrydata)
 
         ::continue::
     end
     sitemap:write("</div>\n")
 
     if not isindex then
-        _write_table_of_content(sitemap, db, locale, siteroot, apientries)
+        _write_table_of_content(sitemap, db, locale, siteroot, apimetalist)
     end
 
     _write_footer(sitemap, siteroot)
