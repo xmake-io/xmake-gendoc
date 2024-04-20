@@ -205,7 +205,11 @@ function _write_api(sitemap, db, locale, siteroot, apimetalist, apientrydata)
 end
 
 function _write_table_of_content(sitemap, db, locale, siteroot, apimetalist)
-    local interfaces = "Interfaces" -- TODO change with language
+    local names = {
+        ["en-us"] = "Interfaces",
+        ["zh-cn"] = "接口"
+    }
+    local interfaces = names[locale]
     sitemap:write(string.format([[
 <div id="toc">
 <table>
