@@ -2,15 +2,12 @@
 isapi: true
 key: is_arch
 name: is_arch
-refer: is_host, is_os, is_plat, is_subarch
+api: bool is_arch(string arch, ...)
 version: 2.0.1
+refer: is_host, is_os, is_plat, is_subarch
 ---
 
 ### ${anchor:is_arch}
-
-```lua
-bool is_arch(string arch, ...)
-```
 
 #### Is the current compilation architecture
 

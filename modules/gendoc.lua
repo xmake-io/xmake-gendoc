@@ -41,6 +41,14 @@ function _load_apimetadata(filecontent, opt)
             table.insert(content, line)
         end
     end
+    if apimetadata.api then
+        for idx, line in ipairs(content) do
+            if line:startswith("### ") then
+                table.insert(content, idx + 1, "`" .. apimetadata.api .. "`")
+                break
+            end
+        end
+    end
     if apimetadata.version then
         local names = {
             ["en-us"] = "Introduced in version",
