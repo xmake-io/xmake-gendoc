@@ -41,11 +41,14 @@ function _load_apimetadata(filecontent, opt)
             table.insert(content, line)
         end
     end
-    if apimetadata.api and type(apimetadata.api) == "string" then
-        for idx, line in ipairs(content) do
-            if line:startswith("### ") then
-                table.insert(content, idx + 1, "`" .. apimetadata.api .. "`")
-                break
+    if apimetadata.api then
+        local api = apimetadata.api
+        if api ~= "true" and api ~= "false" then
+            for idx, line in ipairs(content) do
+                if line:startswith("### ") then
+                    table.insert(content, idx + 1, "`" .. api .. "`")
+                    break
+                end
             end
         end
     end
@@ -255,29 +258,31 @@ function _build_html_page(docdir, title, db, sidebar, opt)
     local isfirst = true
     local apimetalist = {}
     local docroot = path.join(os.projectdir(), "doc", locale)
-    for _, apientryfile in ipairs(os.files(path.join(docroot, docdir, "*.md"))) do
-        if path.filename(apientryfile):startswith("_") then
-            goto continue
+    local files = {}
+    for _, file in ipairs(os.files(path.join(docroot, docdir, "*.md"))) do
+        local filename = path.filename(file)
+        if not filename:startswith("_") then
+            if filename == "0_intro.md" then
+                table.insert(files, 1, file)
+            else
+                table.insert(files, file)
+            end
         end
-
+    end
+    for _, file in ipairs(files) do
         if isfirst then
             isfirst = false
         else
             sitemap:write("<hr />")
         end
-
-        vprint("loading " .. apientryfile)
-        local apientrydata = io.readfile(apientryfile)
+        vprint("loading " .. file)
+        local apientrydata = io.readfile(file)
         _write_api(sitemap, db, locale, siteroot, apimetalist, apientrydata)
-
-        ::continue::
     end
     sitemap:write("</div>\n")
-
     if not isindex then
         _write_table_of_content(sitemap, db, locale, siteroot, apimetalist)
     end
-
     _write_footer(sitemap, siteroot)
     sitemap:close()
 end
