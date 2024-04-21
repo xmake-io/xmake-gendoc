@@ -1,7 +1,7 @@
 ---
 api: true
 key: var_globaldir
-name: ${globaldir}
+name: $(globaldir)
 version: 2.0.1
 ---
 

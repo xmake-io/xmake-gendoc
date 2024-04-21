@@ -1,7 +1,7 @@
 ---
 api: true
 key: var_env
-name: ${env}
+name: $(env)
 version: 2.1.5
 refer: os_getenvs
 ---

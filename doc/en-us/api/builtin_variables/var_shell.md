@@ -1,7 +1,7 @@
 ---
 api: true
 key: var_shell
-name: ${shell}
+name: $(shell)
 version: 2.0.1
 refer: os_shell
 ---
