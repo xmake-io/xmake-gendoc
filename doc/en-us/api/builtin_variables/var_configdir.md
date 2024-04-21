@@ -1,7 +1,7 @@
 ---
 api: true
 key: var_configdir
-name: ${configdir}
+name: $(configdir)
 version: 2.0.1
 refer: os_curdir
 ---

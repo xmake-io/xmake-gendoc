@@ -1,7 +1,7 @@
 ---
 api: true
 key: var_host
-name: ${host}
+name: $(host)
 version: 2.0.1
 refer: is_host
 ---

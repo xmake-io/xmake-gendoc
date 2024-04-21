@@ -1,7 +1,7 @@
 ---
 api: true
 key: var_projectdir
-name: ${projectdir}
+name: $(projectdir)
 version: 2.0.1
 refer: os_projectdir
 ---

@@ -1,7 +1,7 @@
 ---
 api: true
 key: var_curdir
-name: ${curdir}
+name: $(curdir)
 version: 2.0.1
 refer: os_curdir
 ---

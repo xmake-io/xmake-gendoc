@@ -1,7 +1,7 @@
 ---
 api: true
 key: var_buildir
-name: ${buildir}
+name: $(buildir)
 version: 2.0.1
 refer: config_buildir
 ---

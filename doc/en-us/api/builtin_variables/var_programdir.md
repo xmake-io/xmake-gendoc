@@ -1,7 +1,7 @@
 ---
 api: true
 key: var_programdir
-name: ${programdir}
+name: $(programdir)
 version: 2.1.5
 refer: os_programdir
 ---
