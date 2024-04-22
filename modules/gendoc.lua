@@ -111,21 +111,25 @@ function _join_link(...)
     return table.concat(table.pack(...), "/")
 end
 
-function _make_anchor(db, key, locale, siteroot)
+function _make_anchor(db, key, locale, siteroot, text)
     assert(db and key and locale and siteroot and db[locale])
     if db[locale].apis[key] then
-        return [[<a href="]] .. _join_link(siteroot, locale, db[locale].apis[key].page.docdir .. ".html") .. '#' .. db[locale].apis[key].key .. [[" id="]] .. db[locale].apis[key].key .. [[">]] .. db[locale].apis[key].name .. [[</a>]]
+        text = text or db[locale].apis[key].name
+        return [[<a href="]] .. _join_link(siteroot, locale, db[locale].apis[key].page.docdir .. ".html") .. '#' .. db[locale].apis[key].key .. [[" id="]] .. db[locale].apis[key].key .. [[">]] .. text .. [[</a>]]
     else
-        return [[<s>]] .. key .. [[</s>]]
+        text = text or key
+        return [[<s>]] .. text .. [[</s>]]
     end
 end
 
-function _make_link(db, key, locale, siteroot)
+function _make_link(db, key, locale, siteroot, text)
     assert(db and key and locale and siteroot and db[locale])
     if db[locale].apis[key] then
-        return [[<a href="]] .. _join_link(siteroot, locale, db[locale].apis[key].page.docdir .. ".html") .. '#' .. db[locale].apis[key].key .. [[">]] .. db[locale].apis[key].name .. [[</a>]]
+        text = text or db[locale].apis[key].name
+        return [[<a href="]] .. _join_link(siteroot, locale, db[locale].apis[key].page.docdir .. ".html") .. '#' .. db[locale].apis[key].key .. [[">]] .. text .. [[</a>]]
     else
-        return [[<s>]] .. key .. [[</s>]]
+        text = text or key
+        return [[<s>]] .. text .. [[</s>]]
     end
 end
 
@@ -184,23 +188,36 @@ function _write_api(sitemap, db, locale, siteroot, apimetalist, apientrydata)
     assert(apimetadata.name ~= nil, "entry name is nil value")
     table.insert(apimetalist, apimetadata)
 
-    local anchorstart, anchorend
+    local findstart, findend
     repeat
-        anchorstart, anchorend = htmldata:find("%${anchor:[%w_]+}")
-        if anchorstart == nil then break end
+        local anchor
+        findstart, findend, anchor = htmldata:find("%${anchor:([%w_]+)}")
+        if findstart == nil then break end
 
-        local anchor = htmldata:sub(anchorstart + 9, anchorend - 1)
         htmldata = htmldata:gsub("%${anchor:[%w_]+}", _make_anchor(db, anchor, locale, siteroot), 1)
-    until not anchorstart
-
-    local linkstart, linkend
+    until not findstart
     repeat
-        linkstart, linkend = htmldata:find("%${link:[%w_]+}")
-        if linkstart == nil then break end
+        local anchor, text
+        findstart, findend, anchor, text = htmldata:find("%${anchor:([%w_]+):([^${%}]+)}")
+        if findstart == nil then break end
 
-        local link = htmldata:sub(linkstart + 7, linkend - 1)
+        htmldata = htmldata:gsub("%${anchor:[%w_]+:[^${%}]+}", _make_anchor(db, anchor, locale, siteroot, text), 1)
+    until not findstart
+    repeat
+        local link
+        findstart, findend, link = htmldata:find("%${link:([%w_]+)}")
+        if findstart == nil then break end
+
         htmldata = htmldata:gsub("%${link:[%w_]+}", _make_link(db, link, locale, siteroot), 1)
-    until not linkstart
+    until not findstart
+    repeat
+        local link, text
+        findstart, findend, link, text = htmldata:find("%${link:([%w_]+):([^%{%}]+)}")
+        if findstart == nil then break end
+
+        print("custom link", link)
+        htmldata = htmldata:gsub("%${link:[%w_]+:[^%{%}]+}", _make_link(db, link, locale, siteroot, text), 1)
+    until not findstart
     sitemap:write(htmldata)
 end
 

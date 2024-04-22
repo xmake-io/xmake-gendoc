@@ -18,7 +18,7 @@ For example, there is a need now, I want to use the `pkg-config` to get the actu
 target("test")
     ${link:set_kind}("binary")
     if ${link:is_plat}("linux") then
-        ${link:add_ldflags}("$(shell pkg-config --libs sqlite3)")
+        ${link:add_ldflags}("${link:var_shell:$(shell pkg-config --libs sqlite3)}")
     end
 ```
 
