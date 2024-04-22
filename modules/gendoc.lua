@@ -230,15 +230,45 @@ function _write_table_of_content(sitemap, db, locale, siteroot, apimetalist)
 </div>]])
 end
 
-function _write_footer(sitemap, siteroot)
+function _write_footer(sitemap, siteroot, jssearcharray)
     sitemap:write(string.format("\n" .. [[
 <script src="%s/prism.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/minisearch@6.3.0/dist/umd/index.min.js"></script>
+<script type="text/javascript">
+const documents = [
+]] .. jssearcharray .. [[
+]
+
+let miniSearch = new MiniSearch({
+    fields: ['key', 'name'],
+    storeFields: ['key', 'name', 'url'],
+    searchOptions: {
+        boost: { name: 2 },
+        prefix: true,
+        fuzzy: 0.4
+    }
+})
+
+miniSearch.addAll(documents)
+
+function changeSearch(input) {
+    var result = ""
+
+    var found = miniSearch.search(input)
+
+    found.forEach((e) => {
+        result = result + "<tr><td><a href='" + e.url + "#" + e.key + "'>" + e.name + "</a></td></tr>"
+    })
+
+    document.getElementById("search-table-body").innerHTML = result
+}
+</script>
 </body>
 </html>
 ]], siteroot))
 end
 
-function _build_html_page(docdir, title, db, sidebar, opt)
+function _build_html_page(docdir, title, db, sidebar, jssearcharray, opt)
     opt = opt or {}
     local locale = opt.locale or "en-us"
     local page = docdir .. ".html"
@@ -256,6 +286,10 @@ function _build_html_page(docdir, title, db, sidebar, opt)
     sitemap:write('<div id="sidebar">\n')
     sitemap:write(_build_language_selector(db, locale, siteroot, page))
     sitemap:write(sidebar)
+    sitemap:write([[
+<input type="search" id="search-input" placeholder="search" name="search" oninput="changeSearch(this.value);">
+<table><tbody id="search-table-body"></tbody></table>
+]])
     sitemap:write('</div>\n')
 
     sitemap:write('<div id="content">\n')
@@ -287,8 +321,22 @@ function _build_html_page(docdir, title, db, sidebar, opt)
     if not isindex then
         _write_table_of_content(sitemap, db, locale, siteroot, apimetalist)
     end
-    _write_footer(sitemap, siteroot)
+    _write_footer(sitemap, siteroot, jssearcharray)
     sitemap:close()
+end
+
+function _make_search_array(db, opt)
+    local jssearcharray = ""
+    local odreredapikeys = table.orderkeys(db[opt.locale].apis)
+    local id = 1
+    for _, apikey in ipairs(odreredapikeys) do
+        local api = db[opt.locale].apis[apikey]
+        if api.api ~= "false" then
+            jssearcharray = jssearcharray .. "    {id: " .. tostring(id) .. ", key: \"" .. api.key .. "\", name: \"" .. api.name .. "\", url: \"" .. _join_link(opt.siteroot, opt.locale, api.page.docdir) .. ".html\" },\n"
+            id = id + 1
+        end
+    end
+    return jssearcharray:gsub("\\", "/")
 end
 
 function _build_html_pages(opt)
@@ -297,6 +345,7 @@ function _build_html_pages(opt)
     local db = _make_db()
     for _, pagefile in ipairs(os.files(path.join(os.projectdir(), "doc", "*", "pages.lua"))) do
         opt.locale = path.basename(path.directory(pagefile))
+        local jssearcharray = _make_search_array(db, opt)
         local sidebar = ""
         for _, category in ipairs(db[opt.locale].categories) do
             sidebar = sidebar .. "\n<p>" .. category.title .. "</p>\n<ul>\n"
@@ -311,7 +360,7 @@ function _build_html_pages(opt)
         end
 
         for _, page in ipairs(db[opt.locale].pages) do
-            _build_html_page(page.docdir, page.title, db, sidebar, opt)
+            _build_html_page(page.docdir, page.title, db, sidebar, jssearcharray, opt)
         end
     end
     for _, htmlfile in ipairs(os.files(path.join(os.projectdir(), "doc", "*.html"))) do
