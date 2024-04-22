@@ -20,7 +20,7 @@
 
 -- imports
 import("core.base.option")
-import("shared.cmark")
+import("shared.md4c")
 
 function _load_apimetadata(filecontent, opt)
     opt = opt or {}
@@ -176,7 +176,8 @@ function _write_api(sitemap, db, locale, siteroot, apimetalist, apientrydata)
     local apimetadata, content = _load_apimetadata(apientrydata, {locale = locale})
     vprint("apimetadata", apimetadata)
 
-    local htmldata = cmark.md2html(content)
+    local htmldata, errors = md4c.md2html(content)
+    assert(htmldata, errors)
 
     assert(apimetadata.api ~= nil, "entry api is nil value")
     assert(apimetadata.key ~= nil, "entry key is nil value")
@@ -200,7 +201,6 @@ function _write_api(sitemap, db, locale, siteroot, apimetalist, apientrydata)
         local link = htmldata:sub(linkstart + 7, linkend - 1)
         htmldata = htmldata:gsub("%${link:[%w_]+}", _make_link(db, link, locale, siteroot), 1)
     until not linkstart
-
     sitemap:write(htmldata)
 end
 

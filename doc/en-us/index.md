@@ -15,9 +15,9 @@ Support this project by [becoming a sponsor](https://xmake.io/#/about/sponsor). 
 
 You can also consider sponsoring us to get extra technical support services via the [Github sponsor program](https://github.com/sponsors/waruqi). If you do, you can get access to the [xmake-io/technical-support](https://github.com/xmake-io/technical-support) repository, which has the following bennefits:
 
-- ☑️ Handling Issues with higher priority
-- ☑️ One-to-one technical consulting service
-- ☑️ Review your xmake.lua and provide suggestions for improvement
+- [x] Handling Issues with higher priority
+- [x] One-to-one technical consulting service
+- [x] Review your xmake.lua and provide suggestions for improvement
 
 ## Introduction
 
@@ -340,7 +340,9 @@ Xmake's speed on is par with Ninja! The test project: [xmake-core](https://githu
 | cmake(gen+make)  | 5.416s+28.473s      | cmake(gen+make)  | 1.203s+14.030s     |
 | cmake(gen+ninja) | 4.458s+24.842s      | cmake(gen+ninja) | 0.988s+11.644s     |
 
-## Single task compilation
+
+
+### Single task compilation
 
 
 | buildsystem      | Termux (-j1)     | buildsystem      | MacOS (-j1)    |
@@ -349,6 +351,7 @@ Xmake's speed on is par with Ninja! The test project: [xmake-core](https://githu
 | ninja            | 1m52.845s        | ninja            | 38.995s        |
 | cmake(gen+make)  | 5.416s+2m10.539s | cmake(gen+make)  | 1.203s+41.737s |
 | cmake(gen+ninja) | 4.458s+1m54.868s | cmake(gen+ninja) | 0.988s+38.022s |
+
 
 ## More Examples
 
