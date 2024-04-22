@@ -72,3 +72,7 @@ img {		max-width: 100%; }
 		width: 180px; }
 
 #toc table {	background-color: white; }
+
+#search-table-body td {
+		width: 149px;
+		background-color: white; }
