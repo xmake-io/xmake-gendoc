@@ -27,7 +27,7 @@ function _load_apimetadata(filecontent, opt)
     local content = {}
     local apimetadata = {}
     local ismeta = false
-    for idx, line in ipairs(filecontent:split("\n")) do
+    for idx, line in ipairs(filecontent:split("\n", {strict = true})) do
         if idx == 1 and line == "---" then
             ismeta = true
         elseif ismeta then
