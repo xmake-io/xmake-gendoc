@@ -62,6 +62,12 @@ Then, you should change the `name` metadata. This name is what will be used as r
 
 Links are defined with the `${link:key}` value in a markdown file.
 
+Optionally, you can specify a custom text for the link like so `${link:key[:text]}`.
+
+ie.: `${link:my_key:Click Here!}`. It works for both links and anchors.
+
+> ⚠ The characters `{` and `}` can't be used in the replacement text!
+
 ---
 
 Although partially obsolete, more information can be found [here](https://github.com/xmake-io/xmake/pull/4969).

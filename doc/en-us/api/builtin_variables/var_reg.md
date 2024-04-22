@@ -13,6 +13,6 @@ refer: winos_registry_query
 Get the value of an item in the registry by `regpath; name`:
 
 ```lua
-${link:print}("$(reg HKEY_LOCAL_MACHINE\\SOFTWARE\\Microsoft\\Windows NT\\CurrentVersion\\XXXX;Name)")
+${link:print}("${link:var_reg:$(reg HKEY_LOCAL_MACHINE\\SOFTWARE\\Microsoft\\Windows NT\\CurrentVersion\\XXXX;Name)}")
 ```
 

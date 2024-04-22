@@ -14,6 +14,6 @@ For example, you can get the path in the environment variable:
 
 ```lua
 target("test")
-    ${link:add_includedirs}("$(env PROGRAMFILES)/OpenSSL/inc")
+    ${link:add_includedirs}("${link:var_env:$(env PROGRAMFILES)}/OpenSSL/inc")
 ```
 
