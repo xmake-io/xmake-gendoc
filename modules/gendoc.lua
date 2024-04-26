@@ -177,8 +177,8 @@ function _write_header(sitemap, siteroot, title)
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 <meta name="resource-type" content="document">
-<link rel="stylesheet" href="%s/xmake.css" type="text/css" media="all">
 <link rel="stylesheet" href="%s/prism.css" type="text/css" media="all">
+<link rel="stylesheet" href="%s/xmake.css" type="text/css" media="all">
 <title>%s</title>
 </head>
 <body>
@@ -198,9 +198,23 @@ function _write_api(sitemap, db, locale, siteroot, apimetalist, apientrydata)
     -- TODO auto generate links
     -- do not match is_arch before matching os.is_arch
     -- local orderedapikeys = table.orderkeys(db[locale].apis, function(lhs, rhs) return #lhs > #rhs end)
-    -- for _, key in ipairs(orderedapikeys) do
-    --     local api = db[locale].apis[key]
+    -- local contentlines = content:split("\n", {strict = true})
+    -- for _, line in ipairs(contentlines) do
+    --     if line:find("^### " .. apimetadata.key .. "$") then
+    --         line = "### " .. _make_anchor(db, apimetadata.key, locale, siteroot)
+    --     else
+    --         -- local lastfoundidx = 1
+    --         -- for _, key in ipairs(orderedapikeys) do
+    --         --     local api = db[locale].apis[key]
+    --         --     local foundstart, foundend, match = line:find(api.name, lastfoundidx, true)
+    --         --     if match then
+    --         --         local linebegin
+    --         --         line:gsub(match, _make_link(db, api.key, locale, siteroot), 1)
+    --         --     end
+    --         -- end
+    --     end
     -- end
+    -- content = table.concat(contentlines, '\n')
 
     local htmldata, errors = md4c.md2html(content)
     assert(htmldata, errors)
