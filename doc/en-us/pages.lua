@@ -3,7 +3,7 @@
     flag = "🇬🇧",
     categories = {
         {
-            title = "index",
+            title = "Introduction",
             pages = {
                 {
                     docdir = ".",

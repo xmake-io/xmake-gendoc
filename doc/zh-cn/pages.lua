@@ -3,11 +3,11 @@
     flag = "🇨🇳",
     categories = {
         {
-            title = "索引",
+            title = "简介",
             pages = {
                 {
                     docdir = ".",
-                    title = "索引",
+                    title = "index",
                 },
             },
         },
