@@ -20,7 +20,6 @@
 
 -- imports
 import("core.base.option")
-import("plugins.show.lists.apis", {rootdir = os.programdir()})
 import("shared.md4c")
 
 function _load_apimetadata(filecontent, opt)
@@ -120,14 +119,14 @@ function _join_link(...)
     return table.concat(table.pack(...), "/")
 end
 
-function _make_anchor(db, key, locale, siteroot, text)
+function _make_anchor(db, key, locale, siteroot, page, text)
     assert(db and key and locale and siteroot and db[locale])
     if db[locale].apis[key] then
         text = text or db[locale].apis[key].name
-        return [[<a href="]] .. _join_link(siteroot, locale, db[locale].apis[key].page.docdir .. ".html") .. '#' .. db[locale].apis[key].key .. [[" id="]] .. db[locale].apis[key].key .. [[">]] .. text .. [[</a>]]
+        return '<a href="' .. _join_link(siteroot, locale, page) .. '#' .. db[locale].apis[key].key .. '" id="' .. db[locale].apis[key].key .. '">' .. text .. '</a>'
     else
         text = text or key
-        return [[<s>]] .. text .. [[</s>]]
+        return '<s>' .. text .. '</s>'
     end
 end
 
@@ -135,10 +134,10 @@ function _make_link(db, key, locale, siteroot, text)
     assert(db and key and locale and siteroot and db[locale])
     if db[locale].apis[key] then
         text = text or db[locale].apis[key].name
-        return [[<a href="]] .. _join_link(siteroot, locale, db[locale].apis[key].page.docdir .. ".html") .. '#' .. db[locale].apis[key].key .. [[">]] .. text .. [[</a>]]
+        return '<a href="' .. _join_link(siteroot, locale, db[locale].apis[key].page.docdir .. ".html") .. '#' .. db[locale].apis[key].key .. '">' .. text .. '</a>'
     else
         text = text or key
-        return [[<s>]] .. text .. [[</s>]]
+        return '<s>' .. text .. '</s>'
     end
 end
 
@@ -185,7 +184,7 @@ function _write_header(sitemap, siteroot, title)
 ]], siteroot, siteroot, title))
 end
 
-function _write_api(sitemap, db, locale, siteroot, apimetalist, apientrydata)
+function _write_api(sitemap, db, locale, siteroot, page, apimetalist, apientrydata)
     local apimetadata, content = _load_apimetadata(apientrydata, {locale = locale})
     assert(apimetadata.api ~= nil, "entry api is nil value")
     assert(apimetadata.key ~= nil, "entry key is nil value")
@@ -193,28 +192,26 @@ function _write_api(sitemap, db, locale, siteroot, apimetalist, apientrydata)
     table.insert(apimetalist, apimetadata)
     vprint("apimetadata", apimetadata)
 
-    content = content:gsub("\n### " .. apimetadata.key .. "\n", "\n### " .. _make_anchor(db, apimetadata.key, locale, siteroot) .. "\n")
-
     -- TODO auto generate links
     -- do not match is_arch before matching os.is_arch
-    -- local orderedapikeys = table.orderkeys(db[locale].apis, function(lhs, rhs) return #lhs > #rhs end)
-    -- local contentlines = content:split("\n", {strict = true})
-    -- for _, line in ipairs(contentlines) do
-    --     if line:find("^### " .. apimetadata.key .. "$") then
-    --         line = "### " .. _make_anchor(db, apimetadata.key, locale, siteroot)
-    --     else
-    --         -- local lastfoundidx = 1
-    --         -- for _, key in ipairs(orderedapikeys) do
-    --         --     local api = db[locale].apis[key]
-    --         --     local foundstart, foundend, match = line:find(api.name, lastfoundidx, true)
-    --         --     if match then
-    --         --         local linebegin
-    --         --         line:gsub(match, _make_link(db, api.key, locale, siteroot), 1)
-    --         --     end
-    --         -- end
-    --     end
-    -- end
-    -- content = table.concat(contentlines, '\n')
+    local orderedapikeys = table.orderkeys(db[locale].apis, function(lhs, rhs) return #lhs > #rhs end)
+    local contentlines = content:split("\n", {strict = true})
+    for idx, line in ipairs(contentlines) do
+        if line:find("^### " .. apimetadata.name .. "$") then
+            contentlines[idx] = "### " .. _make_anchor(db, apimetadata.key, locale, siteroot, page)
+        else
+            -- local lastfoundidx = 1
+            -- for _, key in ipairs(orderedapikeys) do
+            --     local api = db[locale].apis[key]
+            --     local foundstart, foundend, match = line:find(api.name, lastfoundidx, true)
+            --     if match then
+            --         local linebegin
+            --         line:gsub(match, _make_link(db, api.key, locale, siteroot), 1)
+            --     end
+            -- end
+        end
+    end
+    content = table.concat(contentlines, '\n')
 
     local htmldata, errors = md4c.md2html(content)
     assert(htmldata, errors)
@@ -225,14 +222,14 @@ function _write_api(sitemap, db, locale, siteroot, apimetalist, apientrydata)
         findstart, findend, anchor = htmldata:find("%${anchor ([^%s${%}]+)}")
         if findstart == nil then break end
 
-        htmldata = htmldata:gsub("%${anchor [^%s${%}]+}", _make_anchor(db, anchor, locale, siteroot), 1)
+        htmldata = htmldata:gsub("%${anchor [^%s${%}]+}", _make_anchor(db, anchor, locale, siteroot, page), 1)
     until not findstart
     repeat
         local anchor, text
         findstart, findend, anchor, text = htmldata:find("%${anchor ([^%s${%}]+) ([^${%}]+)}")
         if findstart == nil then break end
 
-        htmldata = htmldata:gsub("%${anchor [^%s${%}]+ [^${%}]+}", _make_anchor(db, anchor, locale, siteroot, text), 1)
+        htmldata = htmldata:gsub("%${anchor [^%s${%}]+ [^${%}]+}", _make_anchor(db, anchor, locale, siteroot, page, text), 1)
     until not findstart
     repeat
         local link
@@ -252,7 +249,7 @@ function _write_api(sitemap, db, locale, siteroot, apimetalist, apientrydata)
     sitemap:write(htmldata)
 end
 
-function _write_table_of_content(sitemap, db, locale, siteroot, apimetalist)
+function _write_table_of_content(sitemap, db, locale, siteroot, page, apimetalist)
     local names = {
         ["en-us"] = "Interfaces",
         ["zh-cn"] = "接口"
@@ -267,8 +264,8 @@ function _write_table_of_content(sitemap, db, locale, siteroot, apimetalist)
     <tbody id="toc-body">]] .. "\n", interfaces))
 
         for _, apimetadata in ipairs(apimetalist) do
-            if apimetadata.api then
-                sitemap:write("        <tr><td>" .. _make_link(db, apimetadata.key, locale, siteroot) .. "</td></tr>\n")
+            if apimetadata.api ~= "false" then
+                sitemap:write('        <tr><td><a href="' .. _join_link(siteroot, locale, page) .. '#' .. apimetadata.key .. '">' .. apimetadata.name .. "</a></td></tr>\n")
             end
         end
 
@@ -377,11 +374,11 @@ function _build_html_page(docdir, title, db, sidebar, jssearcharray, opt)
         end
         vprint("loading " .. file)
         local apientrydata = io.readfile(file)
-        _write_api(sitemap, db, locale, siteroot, apimetalist, apientrydata)
+        _write_api(sitemap, db, locale, siteroot, page, apimetalist, apientrydata)
     end
     sitemap:write("</div>\n")
     if not isindex then
-        _write_table_of_content(sitemap, db, locale, siteroot, apimetalist)
+        _write_table_of_content(sitemap, db, locale, siteroot, page, apimetalist)
     end
     _write_footer(sitemap, siteroot, jssearcharray)
     sitemap:close()
@@ -416,7 +413,7 @@ function _build_html_pages(opt)
                 if pagepath == "." then
                     pagepath = page.title
                 end
-                sidebar = sidebar .. [[<li><a href="]] .. _join_link(opt.siteroot, opt.locale, pagepath .. ".html") .. [[">]] .. page.title .. "</a></li>\n"
+                sidebar = sidebar .. '<li><a href="' .. _join_link(opt.siteroot, opt.locale, pagepath .. ".html") .. '">' .. page.title .. "</a></li>\n"
             end
             sidebar = sidebar .. "</ul>\n"
         end

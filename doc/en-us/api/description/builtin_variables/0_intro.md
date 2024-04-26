@@ -47,6 +47,6 @@ target("test")
     ${link add_defines}("-DTEST=$(var)")
 ```
 
-> ℹ️ All the parameter values of the `xmake f --xxx=...` configuration can be obtained through built-in variables, for example: `xmake f --arch=x86` corresponds to `$(arch)`, others have ` $(plat)`, `$(mode)` and so on. What are the specific parameters, you can check it out by `xmake f -h`.
+> ℹ️ All the parameter values of the `xmake f --xxx=...` configuration can be obtained through built-in variables, for example: `xmake f --arch=x86` corresponds to `$(arch)`, others have `$(plat)`, `$(mode)` and so on. What are the specific parameters, you can check it out by `xmake f -h`.
 
 Since the support is directly obtained from the configuration options, it is convenient to extend the custom options to get the custom variables. For details on how to customize the options, see: [option](#option).
