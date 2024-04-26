@@ -61,6 +61,17 @@ img {           max-width: 100%; }
                 height: 100%;
                 width: 250px; }
 
+#sidebar>p {    font-weight: 700;
+                font-size: 15px; }
+
+#sidebar a {    text-decoration: none;
+                font-size: 14px; }
+
+#sidebar a:hover {
+                text-decoration: underline; }
+
+#sidebar ul {   list-style-type: none; }
+
 #content {      position: absolute;
                 left: 270px;
                 right: 250px; }
