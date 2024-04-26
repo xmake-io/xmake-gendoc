@@ -20,6 +20,7 @@
 
 -- imports
 import("core.base.option")
+import("plugins.show.lists.apis", {rootdir = os.programdir()})
 import("shared.md4c")
 
 function _load_apimetadata(filecontent, opt)
@@ -28,8 +29,16 @@ function _load_apimetadata(filecontent, opt)
     local apimetadata = {}
     local ismeta = false
     for idx, line in ipairs(filecontent:split("\n", {strict = true})) do
-        if idx == 1 and line == "---" then
-            ismeta = true
+        if idx == 1 then
+            local _, _, includepath = line:find("${include (.+)}")
+            if includepath then
+                local apientrydata = io.readfile(path.join(os.projectdir(), "doc", opt.locale, includepath))
+                local apimetadata, content = _load_apimetadata(apientrydata, opt)
+                local isinclude = true
+                return apimetadata, content, isinclude
+            elseif idx == 1 and line == "---" then
+                ismeta = true
+            end
         elseif ismeta then
             if line == "---" then
                 ismeta = false
@@ -72,7 +81,7 @@ function _load_apimetadata(filecontent, opt)
             table.insert(content, "#### " .. name)
             local refers = {}
             for _, line in ipairs(apimetadata.refer:split(",%s+")) do
-                table.insert(refers, "${link:" .. line .. "}")
+                table.insert(refers, "${link " .. line .. "}")
             end
             table.insert(content, table.concat(refers, ", "))
         end
@@ -94,9 +103,9 @@ function _make_db()
                 table.insert(db[locale].pages, page)
                 for _, apientryfile in ipairs(os.files(path.join(localizeddocroot, page.docdir, "*.md"))) do
                     local apientrydata = io.readfile(apientryfile)
-                    local apimetadata = _load_apimetadata(apientrydata, {locale = locale})
-                    if apimetadata.key then
-                        assert(db[locale].apis[apimetadata.key] == nil, "keys must be unique (" .. apimetadata.key .. " was already inserted)")
+                    local apimetadata, _, isinclude = _load_apimetadata(apientrydata, {locale = locale})
+                    if apimetadata.key and not isinclude then
+                        assert(db[locale].apis[apimetadata.key] == nil, "keys must be unique (\"" .. apimetadata.key .. "\" was already inserted) (" .. apientryfile .. ")")
                         db[locale].apis[apimetadata.key] = apimetadata
                         db[locale].apis[apimetadata.key].page = page
                     end
@@ -178,46 +187,54 @@ end
 
 function _write_api(sitemap, db, locale, siteroot, apimetalist, apientrydata)
     local apimetadata, content = _load_apimetadata(apientrydata, {locale = locale})
-    vprint("apimetadata", apimetadata)
-
-    local htmldata, errors = md4c.md2html(content)
-    assert(htmldata, errors)
-
     assert(apimetadata.api ~= nil, "entry api is nil value")
     assert(apimetadata.key ~= nil, "entry key is nil value")
     assert(apimetadata.name ~= nil, "entry name is nil value")
     table.insert(apimetalist, apimetadata)
+    vprint("apimetadata", apimetadata)
+
+    content = content:gsub("\n### " .. apimetadata.key .. "\n", "\n### " .. _make_anchor(db, apimetadata.key, locale, siteroot) .. "\n")
+
+    -- TODO auto generate links
+    -- do not match is_arch before matching os.is_arch
+    -- local orderedapikeys = table.orderkeys(db[locale].apis, function(lhs, rhs) return #lhs > #rhs end)
+    -- for _, key in ipairs(orderedapikeys) do
+    --     local api = db[locale].apis[key]
+    -- end
+
+    local htmldata, errors = md4c.md2html(content)
+    assert(htmldata, errors)
 
     local findstart, findend
     repeat
         local anchor
-        findstart, findend, anchor = htmldata:find("%${anchor:([%w_]+)}")
+        findstart, findend, anchor = htmldata:find("%${anchor ([^%s${%}]+)}")
         if findstart == nil then break end
 
-        htmldata = htmldata:gsub("%${anchor:[%w_]+}", _make_anchor(db, anchor, locale, siteroot), 1)
+        htmldata = htmldata:gsub("%${anchor [^%s${%}]+}", _make_anchor(db, anchor, locale, siteroot), 1)
     until not findstart
     repeat
         local anchor, text
-        findstart, findend, anchor, text = htmldata:find("%${anchor:([%w_]+):([^${%}]+)}")
+        findstart, findend, anchor, text = htmldata:find("%${anchor ([^%s${%}]+) ([^${%}]+)}")
         if findstart == nil then break end
 
-        htmldata = htmldata:gsub("%${anchor:[%w_]+:[^${%}]+}", _make_anchor(db, anchor, locale, siteroot, text), 1)
+        htmldata = htmldata:gsub("%${anchor [^%s${%}]+ [^${%}]+}", _make_anchor(db, anchor, locale, siteroot, text), 1)
     until not findstart
     repeat
         local link
-        findstart, findend, link = htmldata:find("%${link:([%w_]+)}")
+        findstart, findend, link = htmldata:find("%${link ([^%s${%}]+)}")
         if findstart == nil then break end
 
-        htmldata = htmldata:gsub("%${link:[%w_]+}", _make_link(db, link, locale, siteroot), 1)
+        htmldata = htmldata:gsub("%${link [^%s${%}]+}", _make_link(db, link, locale, siteroot), 1)
     until not findstart
     repeat
         local link, text
-        findstart, findend, link, text = htmldata:find("%${link:([%w_]+):([^%{%}]+)}")
+        findstart, findend, link, text = htmldata:find("%${link ([^%s${%}]+) ([^%{%}]+)}")
         if findstart == nil then break end
 
-        print("custom link", link)
-        htmldata = htmldata:gsub("%${link:[%w_]+:[^%{%}]+}", _make_link(db, link, locale, siteroot, text), 1)
+        htmldata = htmldata:gsub("%${link [^%s${%}]+ [^%{%}]+}", _make_link(db, link, locale, siteroot, text), 1)
     until not findstart
+
     sitemap:write(htmldata)
 end
 
@@ -279,6 +296,27 @@ function changeSearch(input) {
 
     document.getElementById("search-table-body").innerHTML = result
 }
+</script>
+<script type="text/javascript">
+function locationHashChanged(e)
+{
+    var tocLinks = document.getElementById("toc-body").getElementsByTagName("a")
+    for(let i = 0;i < tocLinks.length; i++)
+    {
+        if (tocLinks[i].href == window.location.href)
+        {
+            tocLinks[i].style = "font-weight:bold"
+            tocLinks[i].parentElement.style = "background-color:#d6ffed"
+        }
+        else
+        {
+            tocLinks[i].style = ""
+            tocLinks[i].parentElement.style = ""
+        }
+    }
+}
+window.onhashchange = locationHashChanged;
+locationHashChanged({})
 </script>
 </body>
 </html>

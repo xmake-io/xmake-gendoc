@@ -1,6 +1,6 @@
 # xmake-gendoc
 
-This repository contains xmake's documentation (work in progress) and a [script](build.lua) that generates a static HTML website from it.
+This repository contains xmake's documentation (work in progress) and a [script](modules/gendoc.lua) that generates a static HTML website from it.
 
 see [Online Docs](https://xmake-io.github.io/xmake-gendoc/index.html)
 
@@ -56,15 +56,15 @@ Localization directories are completely independent from each other.
 
 In order to add an API documentation to a page, you can copy the [template](doc/template.md) file to a page's docdir and rename it. The markdown's file name is important, as it determines the order in which the files are concatenated in the page.
 
-Next, you need to set this API a unique key in the file header/metadata. This key will be used to generate links from other API documentations or pages to this API. For the link to work, an anchor must be defined with the `${anchor:key}` value in the markdown file.
+Next, you need to set this API a unique key in the file header/metadata. This key will be used to generate links from other API documentations or pages to this API. For the link to work, an anchor must be defined with the `${anchor key}` value in the markdown file.
 
 Then, you should change the `name` metadata. This name is what will be used as replacement text when generating a link for this API.
 
-Links are defined with the `${link:key}` value in a markdown file.
+Links are defined with the `${link key}` value in a markdown file.
 
-Optionally, you can specify a custom text for the link like so `${link:key[:text]}`.
+Optionally, you can specify a custom text for the link like so `${link key [text]}`.
 
-ie.: `${link:my_key:Click Here!}`. It works for both links and anchors.
+ie.: `${link my_key Click Here!}`. It works for both links and anchors.
 
 > ⚠ The characters `{` and `}` can't be used in the replacement text!
 

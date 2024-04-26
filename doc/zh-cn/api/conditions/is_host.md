@@ -6,7 +6,7 @@ refer: is_arch, is_os, is_plat, is_subhost
 version: 2.1.4
 ---
 
-### ${anchor:is_host}
+### is_host
 
 #### 是否为当前的编译主机系统
 
@@ -17,10 +17,10 @@ version: 2.1.4
 因此，我们能够使用这个 API 去决定当前的操作系统。
 
 ```lua
-if ${link:is_host}("windows") then
-    ${link:add_includedirs}("C:\\includes")
+if ${link is_host}("windows") then
+    ${link add_includedirs}("C:\\includes")
 else
-    ${link:add_includedirs}("/usr/includess")
+    ${link add_includedirs}("/usr/includess")
 end
 ```
 
