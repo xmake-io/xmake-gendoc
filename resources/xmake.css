@@ -59,18 +59,18 @@ img {           max-width: 100%; }
                 background-color: #f9fffc;
                 border: 1px solid #ddd;
                 height: 100%;
-                width: 200px; }
+                width: 250px; }
 
 #content {      position: absolute;
-                left: 220px;
-                right: 200px; }
+                left: 270px;
+                right: 250px; }
 
 #toc {          position: fixed;
                 top: 0;
                 bottom: 0;
                 right: 0;
                 background-color: #f9fffc;
-                width: 180px; }
+                width: 210px; }
 
 #toc table {    background-color: white; }
 
@@ -79,3 +79,82 @@ img {           max-width: 100%; }
                 background-color: white; }
 
 :target {       background-color: #b2f9d9; }
+
+.token.cdata,.token.comment,.token.doctype,.token.prolog {
+                color: #8e908c; }
+
+.token.namespace {
+                opacity: .7; }
+
+.token.boolean,.token.number {
+                color: #c76b29; }
+
+.token.punctuation {
+                color: #525252; }
+
+.token.property {
+                color: #c08b30; }
+
+.token.tag {    color: #2973b7; }
+
+.token.string { color: var(--theme-color,#42b983); }
+
+.token.selector {
+                color: #6679cc; }
+
+.token.attr-name {
+                color: #2973b7; }
+
+.language-css .token.string,.style .token.string,.token.entity,.token.url {
+                color: #22a2c9; }
+
+.token.attr-value,.token.control,.token.directive,.token.unit {
+                color: var(--theme-color,#42b983); }
+
+.token.function,.token.keyword {
+                color: #e96900; }
+
+.token.atrule,.token.regex,.token.statement {
+                color: #22a2c9; }
+
+.token.placeholder,.token.variable {
+                color: #3d8fd1; }
+
+.token.deleted {
+                text-decoration: line-through; }
+
+.token.inserted {
+                border-bottom: 1px dotted #202746;
+                text-decoration: none; }
+
+.token.italic { font-style: italic; }
+
+.token.bold,.token.important {
+                font-weight: 700; }
+
+.token.important {
+                color: #c94922; }
+
+.token.entity {
+                cursor: help; }
+
+code .token {   -moz-osx-font-smoothing: initial;
+                -webkit-font-smoothing: initial;
+                min-height: 1.5rem;
+                position: relative;
+                left: auto; }
+
+pre:after {     color: #ccc;
+                content: attr(data-lang);
+                font-size: .6rem;
+                font-weight: 600;
+                height: 15px;
+                line-height: 15px;
+                padding: 5px 10px 0;
+                position: absolute;
+                right: 0;
+                text-align: right;
+                top: 0; }
+
+pre[class*=language-] {
+                background: #f8f8f8; }
