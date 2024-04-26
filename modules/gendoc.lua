@@ -287,29 +287,21 @@ miniSearch.addAll(documents)
 
 function changeSearch(input) {
     var result = ""
-
     var found = miniSearch.search(input)
-
     found.forEach((e) => {
         result = result + "<tr><td><a href='" + e.url + "#" + e.key + "'>" + e.name + "</a></td></tr>"
     })
-
     document.getElementById("search-table-body").innerHTML = result
 }
 </script>
 <script type="text/javascript">
-function locationHashChanged(e)
-{
+function locationHashChanged(e) {
     var tocLinks = document.getElementById("toc-body").getElementsByTagName("a")
-    for(let i = 0;i < tocLinks.length; i++)
-    {
-        if (tocLinks[i].href == window.location.href)
-        {
+    for (let i = 0;i < tocLinks.length; i++) {
+        if (tocLinks[i].href == window.location.href) {
             tocLinks[i].style = "font-weight:bold"
             tocLinks[i].parentElement.style = "background-color:#d6ffed"
-        }
-        else
-        {
+        } else {
             tocLinks[i].style = ""
             tocLinks[i].parentElement.style = ""
         }
@@ -339,12 +331,12 @@ function _build_html_page(docdir, title, db, sidebar, jssearcharray, opt)
     _write_header(sitemap, siteroot, title)
 
     sitemap:write('<div id="sidebar">\n')
-    sitemap:write(_build_language_selector(db, locale, siteroot, page))
-    sitemap:write(sidebar)
     sitemap:write([[
 <input type="search" id="search-input" placeholder="search" name="search" oninput="changeSearch(this.value);">
 <table><tbody id="search-table-body"></tbody></table>
 ]])
+    sitemap:write(_build_language_selector(db, locale, siteroot, page))
+    sitemap:write(sidebar)
     sitemap:write('</div>\n')
 
     sitemap:write('<div id="content">\n')
