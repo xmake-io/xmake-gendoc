@@ -8,4 +8,3 @@ name: Conditions
 
 Conditions are generally used to handle some special compilation platforms.
 
-Can I have <a href='google.com'>inline html</a> in markdown?
