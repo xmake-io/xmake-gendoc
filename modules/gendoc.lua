@@ -368,6 +368,7 @@ function _build_html_page(docdir, title, db, sidebar, jssearcharray, opt)
             end
         end
     end
+    table.sort(files)
     for _, file in ipairs(files) do
         if isfirst then
             isfirst = false
