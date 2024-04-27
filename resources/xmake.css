@@ -19,7 +19,7 @@ code {          background-color: #f8f8f8;
                 padding: 3px 5px;
                 white-space: pre-wrap; }
 code, code a {  color: #e96900; }
-pre code a {    color: black; }
+pre code a {    color: #525252; }
 pre code {      padding: 0;
                 margin: 0; }
 
@@ -167,5 +167,6 @@ pre:after {     color: #ccc;
                 text-align: right;
                 top: 0; }
 
-pre[class*=language-] {
-                background: #f8f8f8; }
+pre[class*=language-], code[class*=language-] {
+                background: #f8f8f8;
+                color: #525252; }
