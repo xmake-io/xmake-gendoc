@@ -33,8 +33,7 @@ function _load_apimetadata(filecontent, opt)
             if includepath then
                 local apientrydata = io.readfile(path.join(os.projectdir(), "doc", opt.locale, includepath))
                 local apimetadata, content = _load_apimetadata(apientrydata, opt)
-                local isinclude = true
-                return apimetadata, content, isinclude
+                return apimetadata, content, includepath
             elseif idx == 1 and line == "---" then
                 ismeta = true
             end
@@ -102,8 +101,8 @@ function _make_db()
                 table.insert(db[locale].pages, page)
                 for _, apientryfile in ipairs(os.files(path.join(localizeddocroot, page.docdir, "*.md"))) do
                     local apientrydata = io.readfile(apientryfile)
-                    local apimetadata, _, isinclude = _load_apimetadata(apientrydata, {locale = locale})
-                    if apimetadata.key and not isinclude then
+                    local apimetadata, _, includepath = _load_apimetadata(apientrydata, {locale = locale})
+                    if apimetadata.key and not includepath then
                         assert(db[locale].apis[apimetadata.key] == nil, "keys must be unique (\"" .. apimetadata.key .. "\" was already inserted) (" .. apientryfile .. ")")
                         db[locale].apis[apimetadata.key] = apimetadata
                         db[locale].apis[apimetadata.key].page = page
@@ -139,6 +138,17 @@ function _make_link(db, key, locale, siteroot, text)
         text = text or key
         return '<s>' .. text .. '</s>'
     end
+end
+
+function _make_editlink(markdownpath, includepath, locale)
+    local siteroot = "https://github.com/xmake-io/xmake-gendoc/edit/main/doc"
+    if includepath then
+        local pos = markdownpath:find(locale, 1, true)
+        if pos then
+            markdownpath = _join_link(markdownpath:sub(1, pos - 1), locale, includepath)
+        end
+    end
+    return '<a href="' .. _join_link(siteroot, markdownpath) .. '" target="_blank">edit</a>'
 end
 
 function _build_language_selector(db, locale, siteroot, page)
@@ -184,8 +194,8 @@ function _write_header(sitemap, siteroot, title)
 ]], siteroot, siteroot, title))
 end
 
-function _write_api(sitemap, db, locale, siteroot, page, apimetalist, apientrydata)
-    local apimetadata, content = _load_apimetadata(apientrydata, {locale = locale})
+function _write_api(sitemap, db, locale, siteroot, page, apimetalist, apientrydata, markdownpath)
+    local apimetadata, content, includepath = _load_apimetadata(apientrydata, {locale = locale})
     assert(apimetadata.api ~= nil, "entry api is nil value")
     assert(apimetadata.key ~= nil, "entry key is nil value")
     assert(apimetadata.name ~= nil, "entry name is nil value")
@@ -215,6 +225,12 @@ function _write_api(sitemap, db, locale, siteroot, page, apimetalist, apientryda
 
     local htmldata, errors = md4c.md2html(content)
     assert(htmldata, errors)
+
+    -- add edit link
+    local editlink = _make_editlink(markdownpath, includepath, locale)
+    if editlink then
+        htmldata = htmldata .. "\n" .. editlink
+    end
 
     local findstart, findend
     repeat
@@ -353,9 +369,10 @@ function _build_html_page(docdir, title, db, sidebar, jssearcharray, opt)
     sitemap:write('<div id="content">\n')
     local isfirst = true
     local apimetalist = {}
-    local docroot = path.join(os.projectdir(), "doc", locale)
+    local docroot = path.join(os.projectdir(), "doc")
+    local localeroot = path.join(docroot, locale)
     local files = {}
-    for _, file in ipairs(os.files(path.join(docroot, docdir, "*.md"))) do
+    for _, file in ipairs(os.files(path.join(localeroot, docdir, "*.md"))) do
         local filename = path.filename(file)
         if not filename:startswith("_") then
             if filename == "0_intro.md" then
@@ -374,7 +391,8 @@ function _build_html_page(docdir, title, db, sidebar, jssearcharray, opt)
         end
         vprint("loading " .. file)
         local apientrydata = io.readfile(file)
-        _write_api(sitemap, db, locale, siteroot, page, apimetalist, apientrydata)
+        local markdownpath = path.relative(file, docroot)
+        _write_api(sitemap, db, locale, siteroot, page, apimetalist, apientrydata, markdownpath)
     end
     sitemap:write("</div>\n")
     if not isindex then
