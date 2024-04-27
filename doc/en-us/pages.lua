@@ -123,7 +123,7 @@
             pages = {
                 {
                     docdir = "api/script/builtin_modules/coroutine",
-                    title = "corountine",
+                    title = "coroutine",
                 },
                 {
                     docdir = "api/script/builtin_modules/debug",
