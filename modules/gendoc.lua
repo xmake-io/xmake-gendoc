@@ -323,14 +323,28 @@ function changeSearch(input) {
 </script>
 <script type="text/javascript">
 function locationHashChanged(e) {
-    var tocLinks = document.getElementById("toc-body").getElementsByTagName("a")
-    for (let i = 0;i < tocLinks.length; i++) {
-        if (tocLinks[i].href == window.location.href) {
-            tocLinks[i].style = "font-weight:bold"
-            tocLinks[i].parentElement.style = "background-color:#d6ffed"
+    var tocbody = document.getElementById("toc-body")
+    if (tocbody) {
+        var tocLinks = tocbody.getElementsByTagName("a")
+        for (let i = 0;i < tocLinks.length; i++) {
+            if (tocLinks[i].href == window.location.href) {
+                tocLinks[i].style = "font-weight:bold"
+                tocLinks[i].parentElement.style = "background-color:#d6ffed"
+            } else {
+                tocLinks[i].style = ""
+                tocLinks[i].parentElement.style = ""
+            }
+        }
+    }
+    var navLinks = document.getElementById("sidebar-nav").getElementsByTagName("a")
+    for (let i = 0;i < navLinks.length; i++) {
+        const urlbase = window.location.href.split('#')
+        if (navLinks[i].href == urlbase[0] || navLinks[i].href == window.location.href) {
+            navLinks[i].style = "font-weight:bold"
+            navLinks[i].parentElement.style = "background-color:#d6ffed"
         } else {
-            tocLinks[i].style = ""
-            tocLinks[i].parentElement.style = ""
+            navLinks[i].style = ""
+            navLinks[i].parentElement.style = ""
         }
     }
 }
@@ -423,7 +437,7 @@ function _build_html_pages(opt)
     for _, pagefile in ipairs(os.files(path.join(os.projectdir(), "doc", "*", "pages.lua"))) do
         opt.locale = path.basename(path.directory(pagefile))
         local jssearcharray = _make_search_array(db, opt)
-        local sidebar = ""
+        local sidebar = '<div id="sidebar-nav">'
         for _, category in ipairs(db[opt.locale].categories) do
             sidebar = sidebar .. "\n<p>" .. category.title .. "</p>\n<ul>\n"
             for _, page in ipairs(category.pages) do
@@ -435,6 +449,7 @@ function _build_html_pages(opt)
             end
             sidebar = sidebar .. "</ul>\n"
         end
+        sidebar = sidebar .. "</div>\n"
 
         for _, page in ipairs(db[opt.locale].pages) do
             _build_html_page(page.docdir, page.title, db, sidebar, jssearcharray, opt)
