@@ -1,9 +1,9 @@
 ---
 key: os.cp
 name: os.cp
-api: nil os.cp(string src, string dst, table opt)
+api: nil os.cp(string src, string dst[, table opt])
 version: 2.0.1
-refer: os.trycp
+refer: os.trycp, os.mv, os.rm
 ---
 
 ### os.cp
