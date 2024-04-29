@@ -3,7 +3,7 @@ key: is_mode
 name: is_mode
 api: bool is_mode(string mode, ...)
 version: 2.0.1
-refer: is_config, var_mode, os_is_mode
+refer: is_config, var_mode, os.is_mode
 ---
 
 ### is_mode
@@ -21,13 +21,13 @@ We often use these configuration values: `debug`, `release`, `profile`, etc.
 if ${link is_mode}("debug") then
 
     -- add macro: DEBUG
-    ${link add_defines}("DEBUG")
+    ${link target.add_defines add_defines}("DEBUG")
 
     -- enable debug symbols
-    ${link set_symbols}("debug")
+    ${link target.set_symbols set_symbols}("debug")
 
     -- disable optimization
-    ${link set_optimize}("none")
+    ${link target.set_optimize set_optimize}("none")
 
 end
 
@@ -37,24 +37,24 @@ if ${link is_mode}("release", "profile") then
     if ${link is_mode}("release") then
 
         -- mark symbols visibility as hidden
-        ${link set_symbols}("hidden")
+        ${link target.set_symbols set_symbols}("hidden")
 
         -- strip all symbols
-        ${link set_strip}("all")
+        ${link target.set_strip set_strip}("all")
 
         -- fomit frame pointer
-        ${link add_cxflags}("-fomit-frame-pointer")
-        ${link add_mxflags}("-fomit-frame-pointer")
+        ${link target.add_cxflags add_cxflags}("-fomit-frame-pointer")
+        ${link target.add_mxflags add_mxflags}("-fomit-frame-pointer")
 
     else
 
         -- enable debug symbols
-        ${link set_symbols}("debug")
+        ${link target.set_symbols set_symbols}("debug")
 
     end
 
     -- add vectorexts
-    ${link add_vectorexts}("sse2", "sse3", "ssse3", "mmx")
+    ${link target.add_vectorexts add_vectorexts}("sse2", "sse3", "ssse3", "mmx")
 end
 ```
 

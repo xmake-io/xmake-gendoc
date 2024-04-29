@@ -3,7 +3,7 @@ key: is_subhost
 name: is_subhost
 api: bool is_subhost(string subhost, ...)
 version: 2.3.1
-refer: is_host, var_subhost, os_is_subhost
+refer: is_host, var_subhost, os.is_subhost
 ---
 
 ### is_subhost

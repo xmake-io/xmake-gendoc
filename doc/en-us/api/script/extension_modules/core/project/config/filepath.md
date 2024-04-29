@@ -1,7 +1,7 @@
 ---
 key: core.project.config.filepath
-name: core.project.config.filepath
+name: config.filepath
 api: true
 ---
 
-### core.project.config.filepath
+### config.filepath

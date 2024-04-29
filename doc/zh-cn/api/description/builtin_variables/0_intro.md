@@ -9,7 +9,7 @@ name: built-in variables
 Xmake provides the syntax of `$(varname)` to support the acquisition of built-in variables, for example:
 
 ```lua
-${link add_cxflags}("-I${link var_buildir}")
+${link target.add_cxflags add_cxflags}("-I${link var_buildir}")
 ```
 
 It will convert the built-in `buildir` variable to the actual build output directory when compiling: `-I./build`
@@ -20,19 +20,19 @@ General built-in variables can be used to quickly get and splicing variable stri
 target("test")
 
     -- Add source files in the project source directory
-    ${link add_files}("${link var_projectdir}/src/*.c")
+    ${link target.add_files add_files}("${link var_projectdir}/src/*.c")
 
     -- Add a header file search path under the build directory
-    ${link add_includedirs}("${link var_buildir}/inc")
+    ${link target.add_includedirs add_includedirs}("${link var_buildir}/inc")
 ```
 
 It can also be used in the module interface of a custom script, for example:
 
 ```lua
 target("test")
-    on_run(function (target)
+    ${link target.on_run on_run}(function (target)
         -- Copy the header file in the current script directory to the output directory
-        ${link os_cp}("${link var_scriptdir}/xxx.h", "${link var_buildir}/inc")
+        ${link os.cp}("${link var_scriptdir}/xxx.h", "${link var_buildir}/inc")
     end)
 ```
 
@@ -44,9 +44,9 @@ It is possible to add custom, project-specific, variables. By default, the `xmak
 
 ```lua
 target("test")
-    ${link add_defines}("-DTEST=$(var)")
+    ${link target.add_defines add_defines}("-DTEST=$(var)")
 ```
 
-> ℹ️ All the parameter values of the `xmake f --xxx=...` configuration can be obtained through built-in variables, for example: `xmake f --arch=x86` corresponds to `$(arch)`, others have ` $(plat)`, `$(mode)` and so on. What are the specific parameters, you can check it out by `xmake f -h`.
+> ℹ️ All the parameter values of the `xmake f --xxx=...` configuration can be obtained through built-in variables, for example: `xmake f --arch=x86` corresponds to `$(arch)`, others have `$(plat)`, `$(mode)` and so on. What are the specific parameters, you can check it out by `xmake f -h`.
 
 Since the support is directly obtained from the configuration options, it is convenient to extend the custom options to get the custom variables. For details on how to customize the options, see: [option](#option).

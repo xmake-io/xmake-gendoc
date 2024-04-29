@@ -3,7 +3,7 @@ api: true
 key: var_reg
 name: $(reg)
 version: 2.1.5
-refer: winos_registry_query
+refer: winos.registry_query
 ---
 
 ### ${anchor var_reg}

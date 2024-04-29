@@ -18,9 +18,9 @@ version: 2.1.4
 
 ```lua
 if ${link is_host}("windows") then
-    ${link add_includedirs}("C:\\includes")
+    ${link target.add_includedirs add_includedirs}("C:\\includes")
 else
-    ${link add_includedirs}("/usr/includess")
+    ${link target.add_includedirs add_includedirs}("/usr/includess")
 end
 ```
 

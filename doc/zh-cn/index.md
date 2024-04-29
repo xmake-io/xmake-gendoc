@@ -80,14 +80,14 @@ Invoke-Expression (Invoke-Webrequest 'https://xmake.io/psget.text' -UseBasicPars
 
 ```lua
 target("hello")
-    set_kind("binary")
-    add_files("src/*.cpp")
+    ${link target.set_kind set_kind}("binary")
+    ${link target.add_files add_files}("src/*.cpp")
 ```
 
 ## 包依赖描述
 
 ```lua
-add_requires("tbox 1.6.*", "zlib", "libpng ~1.6")
+${link add_requires}("tbox 1.6.*", "zlib", "libpng ~1.6")
 ```
 
 官方的xmake包管理仓库: [xmake-repo](https://github.com/xmake-io/xmake-repo)
@@ -354,13 +354,13 @@ hdk           Harmony SDK
 #### Debug 和 Release 模式
 
 ```lua
-add_rules("mode.debug", "mode.release")
+${link target.add_rules add_rules}("mode.debug", "mode.release")
 
 target("console")
-    set_kind("binary")
-    add_files("src/*.c")
-    if is_mode("debug") then
-        add_defines("DEBUG")
+    ${link target.set_kind set_kind}("binary")
+    ${link target.add_files add_files}("src/*.c")
+    if ${link is_mode}("debug") then
+        ${link target.add_defines add_defines}("DEBUG")
     end
 ```
 
@@ -368,11 +368,11 @@ target("console")
 
 ```lua
 target("test")
-    set_kind("binary")
-    add_files("src/*.c")
-    after_build(function (target)
-        print("hello: %s", target:name())
-        os.exec("echo %s", target:targetfile())
+    ${link target.set_kind set_kind}("binary")
+    ${link target.add_files add_files}("src/*.c")
+    ${link target.after_build after_build}(function (target)
+        ${link print}("hello: %s", ${link target:name}())
+        ${link os.exec}("echo %s", ${link target:targetfile}())
     end)
 ```
 
@@ -381,12 +381,12 @@ target("test")
 下载和使用在 [xmake-repo](https://github.com/xmake-io/xmake-repo) 和第三方包仓库的依赖包：
 
 ```lua
-add_requires("tbox >1.6.1", "libuv master", "vcpkg::ffmpeg", "brew::pcre2/libpcre2-8")
-add_requires("conan::openssl/1.1.1g", {alias = "openssl", optional = true, debug = true})
+${link add_requires}("tbox >1.6.1", "libuv master", "vcpkg::ffmpeg", "brew::pcre2/libpcre2-8")
+${link add_requires}("conan::openssl/1.1.1g", {alias = "openssl", optional = true, debug = true})
 target("test")
-    set_kind("binary")
-    add_files("src/*.c")
-    add_packages("tbox", "libuv", "vcpkg::ffmpeg", "brew::pcre2/libpcre2-8", "openssl")
+    ${link target.set_kind set_kind}("binary")
+    ${link target.add_files add_files}("src/*.c")
+    ${link target.add_packages add_packages}("tbox", "libuv", "vcpkg::ffmpeg", "brew::pcre2/libpcre2-8", "openssl")
 ```
 
 另外，我们也可以使用 [xrepo](https://github.com/xmake-io/xrepo) 命令来快速安装依赖包。
@@ -395,33 +395,33 @@ target("test")
 
 ```lua
 target("test")
-    add_rules("qt.quickapp")
-    add_files("src/*.cpp")
-    add_files("src/qml.qrc")
+    ${link target.add_rules add_rules}("qt.quickapp")
+    ${link target.add_files add_files}("src/*.cpp")
+    ${link target.add_files add_files}("src/qml.qrc")
 ```
 
 #### Cuda 程序
 
 ```lua
 target("test")
-    set_kind("binary")
-    add_files("src/*.cu")
-    add_cugencodes("native")
-    add_cugencodes("compute_35")
+    ${link target.set_kind set_kind}("binary")
+    ${link target.add_files add_files}("src/*.cu")
+    ${link target.add_cugencodes add_cugencodes}("native")
+    ${link target.add_cugencodes add_cugencodes}("compute_35")
 ```
 
 #### WDK/UMDF 驱动程序
 
 ```lua
 target("echo")
-    add_rules("wdk.driver", "wdk.env.umdf")
-    add_files("driver/*.c")
-    add_files("driver/*.inx")
-    add_includedirs("exe")
+    ${link target.add_rules add_rules}("wdk.driver", "wdk.env.umdf")
+    ${link target.add_files add_files}("driver/*.c")
+    ${link target.add_files add_files}("driver/*.inx")
+    ${link target.add_includedirs add_includedirs}("exe")
 
 target("app")
-    add_rules("wdk.binary", "wdk.env.umdf")
-    add_files("exe/*.cpp")
+    ${link target.add_rules add_rules}("wdk.binary", "wdk.env.umdf")
+    ${link target.add_files add_files}("exe/*.cpp")
 ```
 
 更多WDK驱动程序例子(umdf/kmdf/wdm)，见：[WDK工程例子](https://xmake.io/#/zh-cn/guide/project_examples?id=wdk%e9%a9%b1%e5%8a%a8%e7%a8%8b%e5%ba%8f)
@@ -430,37 +430,37 @@ target("app")
 
 ```lua
 target("test")
-    add_rules("xcode.application")
-    add_files("src/*.m", "src/**.storyboard", "src/*.xcassets")
-    add_files("src/Info.plist")
+    ${link target.add_rules add_rules}("xcode.application")
+    ${link target.add_files add_files}("src/*.m", "src/**.storyboard", "src/*.xcassets")
+    ${link target.add_files add_files}("src/Info.plist")
 ```
 
 #### Framework 和 Bundle 程序（iOS/MacOS）
 
 ```lua
 target("test")
-    add_rules("xcode.framework") -- 或者 xcode.bundle
-    add_files("src/*.m")
-    add_files("src/Info.plist")
+    ${link target.add_rules add_rules}("xcode.framework") -- 或者 xcode.bundle
+    ${link target.add_files add_files}("src/*.m")
+    ${link target.add_files add_files}("src/Info.plist")
 ```
 
 #### OpenMP 程序
 
 ```lua
-add_requires("libomp", {optional = true})
+${link add_requires}("libomp", {optional = true})
 target("loop")
-    set_kind("binary")
-    add_files("src/*.cpp")
-    add_rules("c++.openmp")
-    add_packages("libomp")
+    ${link target.set_kind set_kind}("binary")
+    ${link target.add_files add_files}("src/*.cpp")
+    ${link target.add_rules add_rules}("c++.openmp")
+    ${link target.add_packages add_packages}("libomp")
 ```
 
 #### Zig 程序
 
 ```lua
 target("test")
-    set_kind("binary")
-    add_files("src/main.zig")
+    ${link target.set_kind set_kind}("binary")
+    ${link target.add_files add_files}("src/main.zig")
 ```
 
 ### 自动拉取远程工具链
@@ -470,11 +470,11 @@ target("test")
 我们使用 llvm-10 中的 clang 来编译项目。
 
 ```lua
-add_requires("llvm 10.x", {alias = "llvm-10"})
+${link add_requires}("llvm 10.x", {alias = "llvm-10"})
 target("test")
-    set_kind("binary")
-    add_files("src/*.c)
-    set_toolchains("llvm@llvm-10")
+    ${link target.set_kind set_kind}("binary")
+    ${link target.add_files add_files}("src/*.c")
+    ${link target.set_toolchains set_toolchains}("llvm@llvm-10")
 ````
 
 #### 拉取交叉编译工具链
@@ -482,11 +482,11 @@ target("test")
 我们也可以拉取指定的交叉编译工具链来编译项目。
 
 ```lua
-add_requires("muslcc")
+${link add_requires}("muslcc")
 target("test")
-    set_kind("binary")
-    add_files("src/*.c)
-    set_toolchains("@muslcc")
+    ${link target.set_kind set_kind}("binary")
+    ${link target.add_files add_files}("src/*.c")
+    ${link target.set_toolchains set_toolchains}("@muslcc")
 ```
 
 #### 拉取工具链并且集成对应工具链编译的依赖包
@@ -494,15 +494,15 @@ target("test")
 我们也可以使用指定的muslcc交叉编译工具链去编译和集成所有的依赖包。
 
 ```lua
-add_requires("muslcc")
-add_requires("zlib", "libogg", {system = false})
+${link add_requires}("muslcc")
+${link add_requires}("zlib", "libogg", {system = false})
 
-set_toolchains("@muslcc")
+${link target.set_toolchains set_toolchains}("@muslcc")
 
 target("test")
-    set_kind("binary")
-    add_files("src/*.c")
-    add_packages("zlib", "libogg")
+    ${link target.set_kind set_kind}("binary")
+    ${link target.add_files add_files}("src/*.c")
+    ${link target.add_packages add_packages}("zlib", "libogg")
 ```
 
 ## 插件
@@ -561,7 +561,7 @@ $ xmake l
 
 我们也可以在Gradle中使用[xmake-gradle](https://github.com/xmake-io/xmake-gradle)插件来集成编译JNI库
 
-```
+```gradle
 plugins {
   id 'org.tboox.gradle-xmake-plugin' version '1.1.5'
 }

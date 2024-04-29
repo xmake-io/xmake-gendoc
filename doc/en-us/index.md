@@ -73,8 +73,8 @@ If you don't want to use the above scripts to install Xmake, visit the [Installa
 
 ```lua
 target("console")
-    set_kind("binary")
-    add_files("src/*.c")
+    ${link target.set_kind set_kind}("binary")
+    ${link target.add_files add_files}("src/*.c")
 ```
 
 Creates a new target `console` of kind `binary`, and adds all the files ending in `.c` in the `src` directory.
@@ -82,7 +82,7 @@ Creates a new target `console` of kind `binary`, and adds all the files ending i
 ## Package dependences
 
 ```lua
-add_requires("tbox 1.6.*", "zlib", "libpng ~1.6")
+${link add_requires}("tbox 1.6.*", "zlib", "libpng ~1.6")
 ```
 
 Adds a requirement of tbox v1.6, zlib (any version), and libpng v1.6.
@@ -358,13 +358,13 @@ Xmake's speed on is par with Ninja! The test project: [xmake-core](https://githu
 ### Debug and release profiles
 
 ```lua
-add_rules("mode.debug", "mode.release")
+${link target.add_rules add_rules}("mode.debug", "mode.release")
 
 target("console")
-    set_kind("binary")
-    add_files("src/*.c")
-    if is_mode("debug") then
-        add_defines("DEBUG")
+    ${link target.set_kind set_kind}("binary")
+    ${link target.add_files add_files}("src/*.c")
+    if ${link is_mode}("debug") then
+        ${link target.add_defines add_defines}("DEBUG")
     end
 ```
 
@@ -372,11 +372,11 @@ target("console")
 
 ```lua
 target("test")
-    set_kind("binary")
-    add_files("src/*.c")
-    after_build(function (target)
-        print("hello: %s", target:name())
-        os.exec("echo %s", target:targetfile())
+    ${link target.set_kind set_kind}("binary")
+    ${link target.add_files add_files}("src/*.c")
+    ${link target.after_build after_build}(function (target)
+        ${link print}("hello: %s", ${link target:name}())
+        ${link os.exec}("echo %s", ${link target:targetfile}())
     end)
 ```
 
@@ -385,12 +385,12 @@ target("test")
 Download and use packages in [xmake-repo](https://github.com/xmake-io/xmake-repo) or third-party repositories:
 
 ```lua
-add_requires("tbox >1.6.1", "libuv master", "vcpkg::ffmpeg", "brew::pcre2/libpcre2-8")
-add_requires("conan::openssl/1.1.1g", {alias = "openssl", optional = true, debug = true})
+${link add_requires}("tbox >1.6.1", "libuv master", "vcpkg::ffmpeg", "brew::pcre2/libpcre2-8")
+${link add_requires}("conan::openssl/1.1.1g", {alias = "openssl", optional = true, debug = true})
 target("test")
-    set_kind("binary")
-    add_files("src/*.c")
-    add_packages("tbox", "libuv", "vcpkg::ffmpeg", "brew::pcre2/libpcre2-8", "openssl")
+    ${link target.set_kind set_kind}("binary")
+    ${link target.add_files add_files}("src/*.c")
+    ${link target.add_packages add_packages}("tbox", "libuv", "vcpkg::ffmpeg", "brew::pcre2/libpcre2-8", "openssl")
 ```
 
 In addition, we can also use the [xrepo](https://github.com/xmake-io/xrepo) command to quickly install dependencies.
@@ -399,33 +399,33 @@ In addition, we can also use the [xrepo](https://github.com/xmake-io/xrepo) comm
 
 ```lua
 target("test")
-    add_rules("qt.quickapp")
-    add_files("src/*.cpp")
-    add_files("src/qml.qrc")
+    ${link target.add_rules add_rules}("qt.quickapp")
+    ${link target.add_files add_files}("src/*.cpp")
+    ${link target.add_files add_files}("src/qml.qrc")
 ```
 
 ### Cuda Program
 
 ```lua
 target("test")
-    set_kind("binary")
-    add_files("src/*.cu")
-    add_cugencodes("native")
-    add_cugencodes("compute_35")
+    ${link target.set_kind set_kind}("binary")
+    ${link target.add_files add_files}("src/*.cu")
+    ${link target.add_cugencodes add_cugencodes}("native")
+    ${link target.add_cugencodes add_cugencodes}("compute_35")
 ```
 
 ### WDK/UMDF Driver Program
 
 ```lua
 target("echo")
-    add_rules("wdk.driver", "wdk.env.umdf")
-    add_files("driver/*.c")
-    add_files("driver/*.inx")
-    add_includedirs("exe")
+    ${link target.add_rules add_rules}("wdk.driver", "wdk.env.umdf")
+    ${link target.add_files add_files}("driver/*.c")
+    ${link target.add_files add_files}("driver/*.inx")
+    ${link target.add_includedirs add_includedirs}("exe")
 
 target("app")
-    add_rules("wdk.binary", "wdk.env.umdf")
-    add_files("exe/*.cpp")
+    ${link target.add_rules add_rules}("wdk.binary", "wdk.env.umdf")
+    ${link target.add_files add_files}("exe/*.cpp")
 ```
 
 For more WDK driver examples (UMDF/KMDF/WDM), please visit [WDK Program Examples](https://xmake.io/#/guide/project_examples?id=wdk-driver-program)
@@ -434,37 +434,37 @@ For more WDK driver examples (UMDF/KMDF/WDM), please visit [WDK Program Examples
 
 ```lua
 target("test")
-    add_rules("xcode.application")
-    add_files("src/*.m", "src/**.storyboard", "src/*.xcassets")
-    add_files("src/Info.plist")
+    ${link target.add_rules add_rules}("xcode.application")
+    ${link target.add_files add_files}("src/*.m", "src/**.storyboard", "src/*.xcassets")
+    ${link target.add_files add_files}("src/Info.plist")
 ```
 
 ### Framework and Bundle Program (Darwin)
 
 ```lua
 target("test")
-    add_rules("xcode.framework") -- or xcode.bundle
-    add_files("src/*.m")
-    add_files("src/Info.plist")
+    ${link target.add_rules add_rules}("xcode.framework") -- or xcode.bundle
+    ${link target.add_files add_files}("src/*.m")
+    ${link target.add_files add_files}("src/Info.plist")
 ```
 
 ### OpenMP Program
 
 ```lua
-add_requires("libomp", {optional = true})
+${link add_requires}("libomp", {optional = true})
 target("loop")
-    set_kind("binary")
-    add_files("src/*.cpp")
-    add_rules("c++.openmp")
-    add_packages("libomp")
+    ${link target.set_kind set_kind}("binary")
+    ${link target.add_files add_files}("src/*.cpp")
+    ${link target.add_rules add_rules}("c++.openmp")
+    ${link target.add_packages add_packages}("libomp")
 ```
 
 ### Zig Program
 
 ```lua
 target("test")
-    set_kind("binary")
-    add_files("src/main.zig")
+    ${link target.set_kind set_kind}("binary")
+    ${link target.add_files add_files}("src/main.zig")
 ```
 
 ### Automatically fetch remote toolchain
@@ -474,11 +474,11 @@ target("test")
 Require the Clang version packaged with LLM-10 to compile a project.
 
 ```lua
-add_requires("llvm 10.x", {alias = "llvm-10"})
+${link add_requires}("llvm 10.x", {alias = "llvm-10"})
 target("test")
-    set_kind("binary")
-    add_files("src/*.c")
-    set_toolchains("llvm@llvm-10")
+    ${link target.set_kind set_kind}("binary")
+    ${link target.add_files add_files}("src/*.c")
+    ${link target.set_toolchains set_toolchains}("llvm@llvm-10")
 ```
 
 #### Fetch a cross-compilation toolchain
@@ -486,11 +486,11 @@ target("test")
 We can also pull a specified cross-compilation toolchain in to compile the project.
 
 ```lua
-add_requires("muslcc")
+${link add_requires}("muslcc")
 target("test")
-    set_kind("binary")
-    add_files("src/*.c")
-    set_toolchains("@muslcc")
+    ${link target.set_kind set_kind}("binary")
+    ${link target.add_files add_files}("src/*.c")
+    ${link target.set_toolchains set_toolchains}("@muslcc")
 ```
 
 #### Fetch toolchain and packages
@@ -498,15 +498,15 @@ target("test")
 We can also use the specified `muslcc` cross-compilation toolchain to compile and integrate all dependent packages.
 
 ```lua
-add_requires("muslcc")
-add_requires("zlib", "libogg", {system = false})
+${link add_requires}("muslcc")
+${link add_requires}("zlib", "libogg", {system = false})
 
-set_toolchains("@muslcc")
+${link target.set_toolchains set_toolchains}("@muslcc")
 
 target("test")
-    set_kind("binary")
-    add_files("src/*.c")
-    add_packages("zlib", "libogg")
+    ${link target.set_kind set_kind}("binary")
+    ${link target.add_files add_files}("src/*.c")
+    ${link target.add_packages add_packages}("zlib", "libogg")
 ```
 
 ## Plugins
@@ -567,7 +567,7 @@ Please download and install other plugins from the plugins repository [xmake-plu
 
 We can use the [xmake-gradle](https://github.com/xmake-io/xmake-gradle) plugin to compile JNI libraries via gradle.
 
-```
+```gradle
 plugins {
   id 'org.tboox.gradle-xmake-plugin' version '1.1.5'
 }

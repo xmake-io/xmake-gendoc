@@ -3,7 +3,7 @@ api: true
 key: var_buildir
 name: $(buildir)
 version: 2.0.1
-refer: config_buildir
+refer: core.project.config.buildir
 ---
 
 ### ${anchor var_buildir}

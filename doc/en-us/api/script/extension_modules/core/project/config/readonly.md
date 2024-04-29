@@ -1,7 +1,7 @@
 ---
 key: core.project.config.readonly
-name: core.project.config.readonly
+name: config.readonly
 api: true
 ---
 
-### core.project.config.readonly
+### config.readonly

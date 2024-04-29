@@ -3,7 +3,7 @@ api: true
 key: var_configdir
 name: $(configdir)
 version: 2.0.1
-refer: os_curdir
+refer: os.curdir
 ---
 
 ### ${anchor var_configdir}

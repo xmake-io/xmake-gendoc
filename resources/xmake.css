@@ -170,3 +170,5 @@ pre:after {     color: #ccc;
 pre[class*=language-], code[class*=language-] {
                 background: #f8f8f8;
                 color: #525252; }
+
+pre, code {     background: #f8f8f8; }

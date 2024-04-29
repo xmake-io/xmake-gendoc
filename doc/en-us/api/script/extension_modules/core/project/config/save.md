@@ -1,7 +1,7 @@
 ---
 key: core.project.config.save
-name: core.project.config.save
+name: config.save
 api: true
 ---
 
-### core.project.config.save
+### config.save

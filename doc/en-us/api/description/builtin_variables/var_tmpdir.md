@@ -3,7 +3,7 @@ api: true
 key: var_tmpdir
 name: $(tmpdir)
 version: 2.0.1
-refer: os_tmpdir
+refer: os.tmpdir
 ---
 
 ### ${anchor var_tmpdir}

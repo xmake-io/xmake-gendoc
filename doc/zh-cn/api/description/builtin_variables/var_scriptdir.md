@@ -3,7 +3,7 @@ api: true
 key: var_scriptdir
 name: $(scriptdir)
 version: 2.1.1
-refer: os_scriptdir
+refer: os.scriptdir
 ---
 
 ### ${anchor var_scriptdir}

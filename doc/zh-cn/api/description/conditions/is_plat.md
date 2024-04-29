@@ -16,12 +16,12 @@ You can use this api to check the configuration command: `xmake f -p iphoneos`
 ```lua
 -- if the current platform is android
 if ${link is_plat}("android") then
-    ${link add_files}("src/xxx/*.c")
+    ${link target.add_files add_files}("src/xxx/*.c")
 end
 
 -- if the current platform is macosx or iphoneos
 if ${link is_plat}("macosx", "iphoneos") then
-    ${link add_frameworks}("Foundation")
+    ${link target.add_frameworks add_frameworks}("Foundation")
 end
 ```
 
