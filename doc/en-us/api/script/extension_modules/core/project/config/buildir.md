@@ -1,7 +1,7 @@
 ---
 key: core.project.config.buildir
-name: core.project.config.buildir
+name: config.buildir
 api: true
 ---
 
-### core.project.config.buildir
+### config.buildir

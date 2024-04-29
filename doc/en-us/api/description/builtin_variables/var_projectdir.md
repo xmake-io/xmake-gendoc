@@ -3,7 +3,7 @@ api: true
 key: var_projectdir
 name: $(projectdir)
 version: 2.0.1
-refer: os_projectdir
+refer: os.projectdir
 ---
 
 ### ${anchor var_projectdir}

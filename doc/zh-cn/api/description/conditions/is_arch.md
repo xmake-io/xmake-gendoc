@@ -17,7 +17,7 @@ You can use this api to check the configuration command: `xmake f -a armv7`
 ```lua
 -- if the current architecture is x86_64 or i386
 if ${link is_arch}("x86_64", "i386") then
-    ${link add_files}("src/xxx/*.c")
+    ${link target:add_files add_files}("src/xxx/*.c")
 end
 
 -- if the current architecture is armv7 or arm64 or armv7s or armv7-a

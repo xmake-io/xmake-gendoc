@@ -14,7 +14,7 @@ Returns true if the target compilation os is the one specified with *os*. Return
 
 ```lua
 if ${link is_os}("ios") then
-    ${link add_files}("src/xxx/*.m")
+    ${link target.add_files add_files}("src/xxx/*.m")
 end
 ```
 

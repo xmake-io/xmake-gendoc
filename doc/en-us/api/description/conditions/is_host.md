@@ -18,9 +18,9 @@ So, we can use this api to determine the current host operating system.
 
 ```lua
 if ${link is_host}("windows") then
-    ${link add_includedirs}("C:\\includes")
+    ${link target.add_includedirs add_includedirs}("C:\\includes")
 else
-    ${link add_includedirs}("/usr/includess")
+    ${link target.add_includedirs add_includedirs}("/usr/includess")
 end
 ```
 
@@ -30,4 +30,4 @@ Support hosts:
 * "linux"
 * "macosx"
 
-We can also get it from ${link var_host} or ${link os_host}.
+We can also get it from ${link var_host} or ${link os.host}.

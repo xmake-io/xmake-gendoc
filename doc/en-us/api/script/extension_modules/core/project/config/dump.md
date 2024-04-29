@@ -1,7 +1,7 @@
 ---
 key: core.project.config.dump
-name: core.project.config.dump
+name: config.dump
 api: true
 ---
 
-### core.project.config.dump
+### config.dump

@@ -1,7 +1,7 @@
 ---
 key: core.project.config.plat
-name: core.project.config.plat
+name: config.plat
 api: true
 ---
 
-### core.project.config.plat
+### config.plat

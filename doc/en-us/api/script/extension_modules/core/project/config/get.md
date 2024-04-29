@@ -1,7 +1,7 @@
 ---
 key: core.project.config.get
-name: core.project.config.get
+name: config.get
 api: true
 ---
 
-### core.project.config.get
+### config.get

@@ -3,7 +3,7 @@ api: true
 key: var_shell
 name: $(shell)
 version: 2.0.1
-refer: os_shell
+refer: os.shell
 ---
 
 ### ${anchor var_shell}
@@ -16,9 +16,9 @@ For example, there is a need now, I want to use the `pkg-config` to get the actu
 
 ```lua
 target("test")
-    ${link set_kind}("binary")
+    ${link target.set_kind set_kind}("binary")
     if ${link is_plat}("linux") then
-        ${link add_ldflags}("${link var_shell $(shell pkg-config --libs sqlite3)}")
+        ${link target.add_ldflags add_ldflags}("${link var_shell $(shell pkg-config --libs sqlite3)}")
     end
 ```
 
