@@ -62,11 +62,12 @@ jobs:
 
       - name: Deploy to Vercel Pages
         run: |
+          git branch
+          git checkout main
           xmake gendoc -y -s https://manual.xmake.io/ -o site
           git config --global user.email "waruqi@gmail.com"
           git config --global user.name "ruki"
           git add -A
           git commit -m "autoupdate docs by xmake-gendoc/ci"
-          git diff HEAD^
           git push git@github.com:waruqi/xmake-gendoc.git main -f
 
