@@ -63,7 +63,7 @@ jobs:
       - name: Deploy to Vercel Pages
         run: |
           git checkout main
-          xmake gendoc -y -s https://manual.xmake.io/ -o site
+          xmake gendoc -y -s https://docs.xmake.io/ -o site
           git config --global user.email "waruqi@gmail.com"
           git config --global user.name "ruki"
           git add -A
