@@ -40,6 +40,13 @@ jobs:
         with:
           xmake-version: branch@dev
 
+      - name: Install SSH key
+        uses: shimataro/ssh-key-action@v2
+        with:
+          key: ${{ secrets.SSH_KEY }}
+          name: id_rsa # optional
+          known_hosts: ${{ secrets.KNOWN_HOSTS }}
+
       - name: Build pages
         run: |
           xmake gendoc -y -s https://xmake-io.github.io/xmake-gendoc/
@@ -52,3 +59,13 @@ jobs:
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4
+
+      - name: Deploy to Vercel Pages
+        run: |
+          xmake gendoc -y -s https://manual.xmake.io/
+          git config --global user.email "waruqi@gmail.com"
+          git config --global user.name "ruki"
+          git add -A -f ./html
+          git diff-index --quiet HEAD || git commit -m "autoupdate docs by xmake-gendoc/ci"
+          git push git@github.com:waruqi/xmake-gendoc.git main -f
+
