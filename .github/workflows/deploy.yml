@@ -65,7 +65,7 @@ jobs:
           xmake gendoc -y -s https://manual.xmake.io/
           git config --global user.email "waruqi@gmail.com"
           git config --global user.name "ruki"
-          git add -A -f ./html
-          git diff-index --quiet HEAD || git commit -m "autoupdate docs by xmake-gendoc/ci"
+          git add -f ./html
+          git commit -a -m "autoupdate docs by xmake-gendoc/ci"
           git push git@github.com:waruqi/xmake-gendoc.git main -f
 
