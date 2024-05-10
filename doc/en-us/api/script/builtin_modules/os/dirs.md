@@ -1,9 +1,9 @@
 ---
 key: os.dirs
 name: os.dirs
-api: table os.dirs(string path)
+api: table os.dirs(string path_pattern[, function callback])
 version: 2.0.1
-refer: os.files, os.isdir
+refer: os.files, os.filedirs, os.isdir, os.match
 ---
 
 ### os.dirs

@@ -3,7 +3,7 @@ key: os.arch
 name: os.arch
 api: string os.arch()
 version: 2.0.1
-refer: is_arch
+refer: os.is_arch, is_arch, os.subarch
 ---
 
 ### os.arch

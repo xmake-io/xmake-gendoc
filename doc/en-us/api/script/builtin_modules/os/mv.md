@@ -1,9 +1,9 @@
 ---
 key: os.mv
 name: os.mv
-api: nil os.mv(string src, string dst, table opt)
+api: nil os.mv(string src, string dst)
 version: 2.0.1
-refer: os.cp, os.trycp, os.rm
+refer: os.trymv, os.vmv, os.cp, os.trycp, os.rm, os.ln, os.touch
 ---
 
 ### os.mv

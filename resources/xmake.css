@@ -48,6 +48,9 @@ td {            border: 1px solid #ddd;
 
 img {           max-width: 100%; }
 
+li {            padding-bottom: 2px;
+                padding-top: 2px; }
+
 #sidebar, #content, #toc {
                 padding: 10px ;
                 display: inline-block;
@@ -74,7 +77,8 @@ img {           max-width: 100%; }
 
 #content {      position: absolute;
                 left: 270px;
-                right: 250px; }
+                right: 250px;
+                padding-bottom: 200px; }
 
 #toc {          position: fixed;
                 top: 0;
@@ -90,6 +94,10 @@ img {           max-width: 100%; }
                 background-color: white; }
 
 :target {       background-color: #b2f9d9; }
+
+p.warn {        background: rgba(66, 185, 131, .1);
+                border-radius: 2px;
+                padding: 1rem; }
 
 .token.cdata,.token.comment,.token.doctype,.token.prolog {
                 color: #8e908c; }

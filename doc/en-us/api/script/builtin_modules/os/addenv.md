@@ -1,9 +1,9 @@
 ---
 key: os.addenv
 name: os.addenv
-api: nil os.addenv(string name[, string ...])
+api: bool os.addenv(string name[, string ...])
 version: 2.1.5
-refer: var_env, os.joinenvs
+refer: os.addenvp, os.addenvs, var_env, os.setenv, os.getenv, os.joinenvs
 ---
 
 ### os.addenv
@@ -12,7 +12,7 @@ refer: var_env, os.joinenvs
 
 ```lua
 -- Add 'bin' to PATH
-${link os.addenv}("PATH", "bin")
+local ok = ${link os.addenv}("PATH", "bin")
 ```
 
 When adding several values, they are concatenated depending on the current os.
