@@ -3,7 +3,7 @@ key: os.cp
 name: os.cp
 api: nil os.cp(string src, string dst[, table opt])
 version: 2.0.1
-refer: os.trycp, os.mv, os.rm
+refer: os.trycp, os.vcp, os.mv, os.rm, os.ln, os.touch
 ---
 
 ### os.cp

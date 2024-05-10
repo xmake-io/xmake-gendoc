@@ -2,6 +2,7 @@
 key: os.atexit
 name: os.atexit
 api: nil os.atexit(function on_exit)
+refer: os.exit
 ---
 
 ### os.atexit

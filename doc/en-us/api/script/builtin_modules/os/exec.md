@@ -1,9 +1,9 @@
 ---
 key: os.exec
 name: os.exec
-api: nil os.exec(string cmd_format[, string ...])
+api: nil os.exec(string cmd_format[, ...])
 version: 2.0.1
-refer: os.run, os.execv, os.vexec, os.vexecv, vformat
+refer: os.run, os.runv, os.iorun, os.iorunv, os.execv, os.vexec, os.vexecv, os.isexec, vformat
 ---
 
 ### os.exec

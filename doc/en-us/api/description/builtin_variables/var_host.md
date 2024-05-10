@@ -10,5 +10,5 @@ refer: is_host
 
 #### Get the native operating system
 
-Refers to the host system of the current native environment, if you compile on macOS, then the system is: `macosx`
+Refers to the host system of the current native environment. If you compile on macOS, then the system is: `macosx`
 
