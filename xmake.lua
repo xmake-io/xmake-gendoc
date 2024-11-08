@@ -21,3 +21,11 @@ task("opendoc")
         }
     }
 
+task("update-apis")
+    on_run("update-apis")
+    set_menu {
+        usage = "xmake update-apis",
+        description = "Create markdown files based on the new available apis in xmake.",
+        options = nil
+    }
+
