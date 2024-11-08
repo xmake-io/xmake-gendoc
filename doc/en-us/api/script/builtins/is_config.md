@@ -1,7 +1,1 @@
----
-key: is_config
-name: is_config
-api: true
----
-
-### is_config
+${include api/description/builtins/is_config.md}

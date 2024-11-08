@@ -1,1 +1,7 @@
-${include api/script/builtins/is_config.md}
+---
+key: is_config
+name: is_config
+api: true
+---
+
+### is_config
